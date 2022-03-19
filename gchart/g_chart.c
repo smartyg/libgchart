@@ -59,19 +59,24 @@ struct _GChartPrivate
 	chart_range_value_t x_min_value_cb, x_max_value_cb, y1_min_value_cb, y1_max_value_cb, y2_min_value_cb, y2_max_value_cb;
 	guint n_steps;
 	float step_size;
+	float zoom, x_center;
+	chart_action_t on_mouse_over_cb;
+	chart_action_t on_mouse_click_cb;
 };
 
 /* Declaration of the callback functions. */
-static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
 static gboolean _chart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data);
+static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
+static gboolean _chart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
 
 static void g_chart_dispose(GObject *object);
 static void g_chart_finalize(GObject *object);
 static void g_chart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
 static void g_chart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
+inline static float _get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event);
 inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv);
-inline static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv);
-inline static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv);
+static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv);
+static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv);
 inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const guint width, const guint height);
 inline static void _draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2);
 inline static void _draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double y2);
@@ -152,8 +157,14 @@ static void g_chart_init(GChart *self)
 
 	/* callbacks for lineplotting */
 	priv->x_min_value_cb = priv->x_max_value_cb = priv->y1_min_value_cb = priv->y1_max_value_cb = priv->y2_min_value_cb = priv->y2_max_value_cb = NULL;
-	priv->n_steps = 0;
+	priv->n_steps = 100;
 	priv->step_size = 0.0;
+
+	priv->zoom = 0;
+	priv->x_center = NAN;
+
+	priv->on_mouse_over_cb = NULL;
+	priv->on_mouse_click_cb = NULL;
 
 	/* Connect the chart_t struct to this widget. */
 	g_object_set_data(G_OBJECT(self), "chart-data", NULL);
@@ -164,6 +175,7 @@ static void g_chart_init(GChart *self)
 	/* Connect the draw and motion signals. */
 	g_signal_connect(G_OBJECT(self), "draw", G_CALLBACK(_chart_draw_cb), NULL);
 	g_signal_connect(G_OBJECT(self), "motion-notify-event", G_CALLBACK(_chart_cursor_move_cb), NULL);
+	g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(_chart_cursor_click_cb), NULL);
 }
 
 static void g_chart_dispose(GObject *object)
@@ -220,11 +232,11 @@ static void g_chart_set_property(GObject *object, guint property_id, const GValu
 		case PROP_N_STEPS:
 			if(value->g_type == G_TYPE_UINT)
 				priv->n_steps = g_value_get_uint(value);
-            break;
+			break;
 		case PROP_STEP_SIZE:
 			if(value->g_type == G_TYPE_FLOAT)
 				priv->step_size = g_value_get_float(value);
-            break;
+			break;
 		default:
 			/* We don't have any other property... */
 			G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -263,10 +275,10 @@ static void g_chart_get_property(GObject *object, guint property_id, GValue *val
 			break;
 		case PROP_N_STEPS:
 			g_value_set_uint(value, priv->n_steps);
-            break;
+			break;
 		case PROP_STEP_SIZE:
 			g_value_set_float(value, priv->step_size);
-            break;
+			break;
 		default:
 			/* We don't have any other property... */
 			G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -471,6 +483,96 @@ void g_chart_set_y2_limits_functions(GChart *self, chart_range_value_t y2_min_va
 	priv->y2_max_value_cb = y2_max_value_cb;
 }
 
+void g_chart_set_n_steps(GChart *self, const unsigned int n_steps)
+{
+	GChartPrivate *priv;
+	g_return_if_fail(G_IS_CHART(self));
+	priv = g_chart_get_instance_private(self);
+	priv->n_steps = n_steps;
+}
+
+unsigned int g_chart_get_n_steps(GChart *self)
+{
+	GChartPrivate *priv;
+	g_return_val_if_fail(G_IS_CHART(self), 0);
+	priv = g_chart_get_instance_private(self);
+	return priv->n_steps;
+}
+
+void g_chart_set_zoom(GChart *self, const float zoom, const float center)
+{
+	GChartPrivate *priv;
+	g_return_if_fail(G_IS_CHART(self));
+	g_return_if_fail(zoom >= 1.0f);
+	priv = g_chart_get_instance_private(self);
+
+	priv->zoom = zoom;
+	if(isfinite(center))
+		priv->x_center = center;
+}
+
+float g_chart_get_zoom(GChart *self)
+{
+	GChartPrivate *priv;
+	g_return_val_if_fail(G_IS_CHART(self), NAN);
+	priv = g_chart_get_instance_private(self);
+	return priv->zoom;
+}
+
+float g_chart_get_center(GChart *self)
+{
+	GChartPrivate *priv;
+	g_return_val_if_fail(G_IS_CHART(self), NAN);
+	priv = g_chart_get_instance_private(self);
+	return priv->x_center;
+}
+
+void g_chart_set_on_mouse_over_function(GChart *self, chart_action_t on_mouse_over_cb)
+{
+	GChartPrivate *priv;
+	g_return_if_fail(G_IS_CHART(self));
+	priv = g_chart_get_instance_private(self);
+	priv->on_mouse_over_cb = on_mouse_over_cb;
+}
+
+chart_action_t g_chart_get_on_mouse_over_function(GChart *self)
+{
+	GChartPrivate *priv;
+	g_return_val_if_fail(G_IS_CHART(self), NULL);
+	priv = g_chart_get_instance_private(self);
+	return priv->on_mouse_over_cb;
+}
+
+void g_chart_set_on_mouse_click_function(GChart *self, chart_action_t on_mouse_click_cb)
+{
+	GChartPrivate *priv;
+	g_return_if_fail(G_IS_CHART(self));
+	priv = g_chart_get_instance_private(self);
+	priv->on_mouse_click_cb = on_mouse_click_cb;
+}
+
+chart_action_t g_chart_get_on_mouse_click_function(GChart *self)
+{
+	GChartPrivate *priv;
+	g_return_val_if_fail(G_IS_CHART(self), NULL);
+	priv = g_chart_get_instance_private(self);
+	return priv->on_mouse_click_cb;
+}
+
+static float _get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event)
+{
+	guint width, height;
+	GChartPrivate *priv;
+
+	width = gtk_widget_get_allocated_width(widget);
+	height = gtk_widget_get_allocated_height(widget);
+	priv = g_chart_get_instance_private(G_CHART(widget));
+
+	if(event->x > priv->offset_left && event->x < width - priv->offset_right && event->y > priv->offset_top && event->y < height - priv->offset_bottom)
+		return (event->x - priv->offset_left) / priv->x_scale + priv->x_min;
+	return NAN;
+}
+
 static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
 {
 	UNUSED(user_data);
@@ -480,16 +582,20 @@ static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, 
 	cairo_region_t *r;
 	cairo_rectangle_int_t *rect;
 	guint width, height;
+	float x_info_value_old;
 
 	priv = g_chart_get_instance_private(G_CHART(widget));
 
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
 
-	if(event->x > priv->offset_left && event->x < width - priv->offset_right && event->y > priv->offset_top && event->y < height - priv->offset_bottom)
-		priv->x_info_value = (event->x - priv->offset_left) / priv->x_scale + priv->x_min;
-	else
-		priv->x_info_value = NAN;
+	/* Save the old info value, so it can be compared to the new one. */
+	x_info_value_old = priv->x_info_value;
+	priv->x_info_value = _get_x_value_mouse(widget, event);
+
+	/* If the mouse changed on the x axis, call the on mouse over callback. */
+	if(priv->on_mouse_over_cb != NULL && !isnan(priv->x_info_value) && (isnan(x_info_value_old) || priv->x_info_value != x_info_value_old))
+		priv->on_mouse_over_cb(priv->x_info_value, priv->user_data);
 
 	if((window = gtk_widget_get_window(widget)) != NULL)
 	{
@@ -504,6 +610,22 @@ static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, 
 		g_slice_free(cairo_rectangle_int_t, rect);
 	}
 
+	return TRUE;
+}
+
+static gboolean _chart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+{
+	UNUSED(user_data);
+
+	float x_value;
+	GChartPrivate *priv;
+
+	priv = g_chart_get_instance_private(G_CHART(widget));
+	if(priv->on_mouse_click_cb != NULL)
+	{
+		if(!isnan((x_value = _get_x_value_mouse(widget, event))))
+			priv->on_mouse_click_cb(x_value, priv->user_data);
+	}
 	return TRUE;
 }
 
@@ -580,7 +702,7 @@ static gboolean _chart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_dat
 	return FALSE;
 }
 
-inline static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv)
+static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv)
 {
 	guint width, height;
 	float h, offset, x_value, n;
@@ -634,30 +756,56 @@ inline static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivat
 	cairo_fill(cr);
 }
 
-inline static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv)
+static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv)
 {
-	float step_size, x_value;
+	float step_size, x_value, x_min_real, x_max_real;
 	guint width, height;
 
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
 
+	/* Get the real minimum and maximum values of the x axis. */
 	if(priv->x_min_value_cb != NULL)
-		priv->x_min = priv->x_min_value_cb(priv->user_data);
+		x_min_real = priv->x_min_value_cb(priv->user_data);
 	else
-		priv->x_min = 0;
+		x_min_real = 0;
 
 	if(priv->x_max_value_cb != NULL)
+		x_max_real = priv->x_max_value_cb(priv->user_data);
+	else
 	{
-		priv->x_max = priv->x_max_value_cb(priv->user_data);
-		step_size = (priv->x_max - priv->x_min) / priv->n_steps;
+		x_min_real = 0;
+		x_max_real = priv->step_size * priv->n_steps;
+	}
+
+	/* If zoom is bigger than 1.0 then adjust the minimum and maximum x value to it. */
+	if(isfinite(priv->zoom) && priv->zoom > 1.0f)
+	{
+		float x_span = (x_max_real - x_min_real) / ( 2 * priv->zoom);
+		/* If x_center is not set, set it to the middle of the real window. */
+		if(!isfinite(priv->x_center))
+		{
+			priv->x_center = (x_max_real + x_min_real) /  2;
+		}
+		else
+		{
+			/* If x_center was set, check if it is within the minimum and maximum. */
+			priv->x_center = MAX(x_min_real + x_span, priv->x_center);
+			priv->x_center = MIN(x_max_real - x_span, priv->x_center);
+		}
+		priv->x_max = priv->x_center + x_span;
+		priv->x_min = priv->x_center - x_span;
 	}
 	else
 	{
-		priv->x_min = 0;
-		priv->x_max = priv->step_size * priv->n_steps;
-		step_size = priv->step_size;
+		priv->zoom = 1;
+		priv->x_max = x_max_real;
+		priv->x_min = x_min_real;
+		priv->x_center = (x_max_real + x_min_real) /  2;
 	}
+
+	/* Calculate the step size. */
+	step_size = (priv->x_max - priv->x_min) / priv->n_steps;
 
 	/* Get the minimum and maximum values for the Y1 axis */
 	if((priv->y1_min_value_cb == NULL || priv->y1_max_value_cb == NULL) && priv->x_min != priv->x_max)
@@ -947,6 +1095,9 @@ static gchar *get_value_as_text(const float value, const char *unit, const chart
 {
 	gchar *text;
 	GValue *v;
+
+	v = NULL;
+
 	if(info_cb != NULL && unit != NULL) /* unit and info_cb are given */
 	{
 		v = info_cb(value, user_data);

@@ -29,6 +29,11 @@ typedef float (*chart_range_value_t)(gconstpointer user_data);
  */
 typedef GValue *(*chart_value_to_info_string_t)(float v, gconstpointer user_data);
 
+/**
+ * Callback prototype to get on mouse over events.
+ */
+typedef void (*chart_action_t)(float x_value, gconstpointer user_data);
+
 typedef struct _GChart        GChart;
 typedef struct _GChartClass   GChartClass;
 
@@ -111,6 +116,15 @@ void g_chart_set_y2_limits(GChart *self, const float y2_min, const float y2_max)
 void g_chart_set_x_limits_functions(GChart *self, chart_range_value_t x_min_value_cb, chart_range_value_t x_max_value_cb);
 void g_chart_set_y1_limits_functions(GChart *self, chart_range_value_t y1_min_value_cb, chart_range_value_t y1_max_value_cb);
 void g_chart_set_y2_limits_functions(GChart *self, chart_range_value_t y2_min_value_cb, chart_range_value_t y2_max_value_cb);
+void g_chart_set_n_steps(GChart *self, const unsigned int n_steps);
+unsigned int g_chart_get_n_steps(GChart *self);
+void g_chart_set_zoom(GChart *self, const float zoom, const float center);
+float g_chart_get_zoom(GChart *self);
+float g_chart_get_center(GChart *self);
+void g_chart_set_on_mouse_over_function(GChart *self, chart_action_t on_mouse_over_cb);
+chart_action_t g_chart_get_on_mouse_over_function(GChart *self);
+void g_chart_set_on_mouse_click_function(GChart *self, chart_action_t on_mouse_click_cb);
+chart_action_t g_chart_get_on_mouse_click_function(GChart *self);
 
 G_END_DECLS
 

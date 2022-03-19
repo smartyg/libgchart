@@ -14,7 +14,7 @@
 
 %define libName @PACKAGE_NAME@
 %define srcVersion @VERSION@
-%define currentVersion @LIBRARY_CURRENT_VERSION@
+%define majorVersion @LIBRARY_OLD_INTERFACE@
 
 Name:           @PROGRAM_NAME@
 Version:        @GIT_VERSION@
@@ -37,18 +37,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{srcVersion}-build
 @PROGRAM_DESCRIPTION@
 
 
-%package -n %{libName}%{currentVersion}
+%package -n %{libName}%{majorVersion}
 Summary:        @PROGRAM_SUMMARY@
 Group:          System/Libraries
 
-%description -n %{libName}%{currentVersion}
+%description -n %{libName}%{majorVersion}
 @PROGRAM_DESCRIPTION@
 
 
 %package devel
 Summary:        Development files for @PACKAGE_NAME@
 Group:          Development/Sources
-Requires:       %{libName}%{currentVersion} = %{version}
+Requires:       %{libName}%{majorVersion} = %{version}
 Requires:       glibc-devel
 Requires:       glib2-devel
 Requires:       pkgconfig
@@ -75,7 +75,7 @@ Development files for @PACKAGE_NAME@.
 %package docs
 Summary:	Documentation for @PACKAGE_NAME@
 Group:		Documentation/Other
-Requires:	%{libName}%{currentVersion} = %{version}
+Requires:	%{libName}%{majorVersion} = %{version}
 
 %description docs
 Documentation for @PACKAGE_NAME@.
@@ -85,7 +85,7 @@ Documentation for @PACKAGE_NAME@.
 %package lang
 Summary:	Language files @PACKAGE_NAME@
 Group:		System/Localization
-Requires:	%{libName}%{currentVersion} = %{version}
+Requires:	%{libName}%{majorVersion} = %{version}
 
 %description lang
 Language file for @PACKAGE_NAME@.
@@ -105,14 +105,14 @@ mkdir %{buildroot}/usr/share/help
 %find_lang %{libName}
 %fdupes docs/html
 
-%post -n %{libName}%{currentVersion}
+%post -n %{libName}%{majorVersion}
 /sbin/ldconfig
 
-%postun -n %{libName}%{currentVersion}
+%postun -n %{libName}%{majorVersion}
 /sbin/ldconfig
 
 
-%files -n %{libName}%{currentVersion}
+%files -n %{libName}%{majorVersion}
 %defattr(-,root,root)
 %{_libdir}/%{libName}.so.*
 

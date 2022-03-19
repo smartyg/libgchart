@@ -1,9 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(libgchart, 0.0.3, goedhart.martijn@gmail.com)
+AC_INIT(libgchart, 0.1.0, goedhart.martijn@gmail.com)
 AC_CONFIG_SRCDIR([gchart/g_chart.c])
 AC_CONFIG_HEADERS([config.h])
+AH_BOTTOM([#include <features.h>])
 
 AC_CANONICAL_BUILD
 AC_CONFIG_MACRO_DIR([m4])
@@ -29,17 +30,17 @@ AC_DEFUN([AX_CHECK_LIB], [
 AX_DEFINE_SUBST([PROGRAM_NAME], [gchart], [program name])
 AX_DEFINE_SUBST([PROGRAM_SUMMARY], [Library provides a simple chart widget for GTK+ 3.x], [program summary])
 AX_DEFINE_SUBST([PROGRAM_DESCRIPTION], [], [program description])
-AX_DEFINE_SUBST([LAST_CHANGE], [15-09-2014], [Date of last change])
+AX_DEFINE_SUBST([LAST_CHANGE], [03-01-2015], [Date of last change])
 AX_DEFINE_SUBST([AUTHOR], [Martijn Goedhart], [Author])
-AX_DEFINE_SUBST([COPYRIGHT], [(c) 2014 Martijn Goedhart], [Copyright])
+AX_DEFINE_SUBST([COPYRIGHT], [(c) 2014-2015 Martijn Goedhart], [Copyright])
 AX_DEFINE_SUBST([LICENSE], [GNU General Public License], [License name])
 AX_DEFINE_SUBST([LICENSE_SHORT], [GPLv2+], [License shorthand])
 AX_DEFINE_SUBST([LICENSE_SHORT_RPM], [GPL-2.0+], [SPDX License code])
 AX_DEFINE_SUBST([LICENSE_LONG], [GNU GPL version 2 or later <http://www.gnu.org/licenses/gpl-2.0.html>], [Long license description])
 AX_DEFINE_SUBST([PACKAGE_HOMEPAGE], [http://www.martijn-goedhart.nl/libgchart/], [package home page])
-AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [0], [version of this library])
+AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [1], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
-AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [0], [version of this library])
+AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
 
 # Checks for programs.
 AC_LANG_C
@@ -94,6 +95,9 @@ AX_CHECK_LIB([m], [floor], [M])
 
 AC_DEFINE([_GNU_SOURCE], [1], [use gnu extensions])
 AC_DEFINE([_(s)], [dgettext(PROGRAM_NAME, s)], [use gnu extensions])
+
+# Compute the major version of the library which is the last part of the library SONAME.
+AC_SUBST([LIBRARY_OLD_INTERFACE], [$((LIBRARY_CURRENT_VERSION-LIBRARY_AGE_VERSION))])
 
 # Test for programs
 AC_CHECK_PROGS([GIT], [git])
