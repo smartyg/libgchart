@@ -1,6 +1,6 @@
 /* kate: indent-mode cstyle; tab-width 4; indent-width 4; */
-#ifndef __G_TABLE_H__
-#define __G_TABLE_H__
+#ifndef __G_CHART_H__
+#define __G_CHART_H__
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -29,10 +29,17 @@ typedef float (*chart_range_value_t)(gconstpointer user_data);
  */
 typedef GValue *(*chart_value_to_info_string_t)(float v, gconstpointer user_data);
 
+typedef struct _GChart        GChart;
+typedef struct _GChartClass   GChartClass;
+
 /**
- *
+ * Type to define properties for a chart.
+ * This type can be passed into `g_chart_set_from_definition` to set all the
+ * chart properties in one call.
  */
-typedef struct
+typedef struct _chart_def chart_def_t;
+
+struct _chart_def
 {
 	const gchar *title; ///< Title of this chart.
 	gboolean plot_lines; ///< TRUE when a line must been drawn between the points.
@@ -58,10 +65,7 @@ typedef struct
 	chart_get_value_t x_value_cb; ///< Function to get the real value on the X axis. When this is NULL, the pseudo x value is used.
 	chart_get_value_t y1_value_cb; ///< Function to get the real value on the Y1 axis.
 	chart_get_value_t y2_value_cb; ///< Function to get the real value on the Y2 axis.
-} chart_def_t;
-
-typedef struct _GChart        GChart;
-typedef struct _GChartClass   GChartClass;
+};
 
 struct _GChart
 {
@@ -78,14 +82,19 @@ struct _GChartClass
 /* used by G_TYPE_CHART */
 GType g_chart_get_type(void) G_GNUC_CONST;
 
-/*
- * Method definitions.
- */
 /**
  * Create a new chart with the given chart definition.
  */
 GChart *g_chart_new(void);
 
+/**
+ * Free and release the memory used by the chart.
+ */
+void g_chart_free(GChart *self);
+
+/*
+ * Method definitions.
+ */
 gboolean g_chart_set_from_definition(GChart *self, const chart_def_t *cd, gconstpointer user_data);;
 void g_chart_enable_y2_axis(GChart *self, gboolean enable);
 void g_chart_plot_lines(GChart *self, gboolean lines);
@@ -103,11 +112,6 @@ void g_chart_set_x_limits_functions(GChart *self, chart_range_value_t x_min_valu
 void g_chart_set_y1_limits_functions(GChart *self, chart_range_value_t y1_min_value_cb, chart_range_value_t y1_max_value_cb);
 void g_chart_set_y2_limits_functions(GChart *self, chart_range_value_t y2_min_value_cb, chart_range_value_t y2_max_value_cb);
 
-/**
- * Free and release the memory used by the chart.
- */
-void g_chart_free(GChart *self);
-
 G_END_DECLS
 
-#endif /* __G_TABLE_H__ */
+#endif /* __G_CHART_H__ */
