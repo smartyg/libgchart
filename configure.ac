@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(libgchart, 0.0.2, goedhart.martijn@gmail.com)
+AC_INIT(libgchart, 0.0.3, goedhart.martijn@gmail.com)
 AC_CONFIG_SRCDIR([gchart/g_chart.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -29,7 +29,7 @@ AC_DEFUN([AX_CHECK_LIB], [
 AX_DEFINE_SUBST([PROGRAM_NAME], [gchart], [program name])
 AX_DEFINE_SUBST([PROGRAM_SUMMARY], [Library provides a simple chart widget for GTK+ 3.x], [program summary])
 AX_DEFINE_SUBST([PROGRAM_DESCRIPTION], [], [program description])
-AX_DEFINE_SUBST([LAST_CHANGE], [10-09-2014], [Date of last change])
+AX_DEFINE_SUBST([LAST_CHANGE], [15-09-2014], [Date of last change])
 AX_DEFINE_SUBST([AUTHOR], [Martijn Goedhart], [Author])
 AX_DEFINE_SUBST([COPYRIGHT], [(c) 2014 Martijn Goedhart], [Copyright])
 AX_DEFINE_SUBST([LICENSE], [GNU General Public License], [License name])

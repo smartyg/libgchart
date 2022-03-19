@@ -78,6 +78,7 @@ inline static void _draw_sub_line_vertical(cairo_t *cr, const double value, cons
 inline static void _draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double x2);
 inline static void _set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap);
 static void _print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding);
+static gchar *get_value_as_text(const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data);
 static void _print_value_with_unit(cairo_t *cr, const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding);
 
 G_DEFINE_TYPE_WITH_PRIVATE(GChart, g_chart, GTK_TYPE_DRAWING_AREA);
@@ -511,8 +512,9 @@ inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv)
 	/* Get expected text width for the top and left. This is based on the labels on the y-axis */
 	cairo_text_extents_t extents, extents2;
 	gchar *text;
+	float info_box_width;
 
-	text = g_strdup_printf("00.0 %s", priv->y1_unit);
+	text = get_value_as_text(0.0, priv->y1_unit, priv->y1_info_cb, priv->user_data);
 	cairo_text_extents(cr, text, &extents);
 	g_free(text);
 	text = NULL;
@@ -520,32 +522,45 @@ inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv)
 	extents.height += PADDING;
 	priv->offset_left = extents.width + BORDER_OFFSET;
 	priv->offset_top = extents.height / 2 + BORDER_OFFSET;
+	info_box_width = extents.width;
 
 	/* Get expected text width for the info box */
 	cairo_text_extents(cr, _(priv->x_label), &extents);
-	cairo_text_extents(cr, _(priv->y1_label), &extents2);
 	extents.width += PADDING;
-	extents2.width += PADDING;
-	priv->info_box_width = 2 * MAX(extents.width, extents2.width) + 2 * BORDER_OFFSET;
+	info_box_width = MAX(extents.width, info_box_width);
+
+	cairo_text_extents(cr, _(priv->y1_label), &extents);
+	extents.width += PADDING;
+	info_box_width = MAX(extents.width, info_box_width);
+
+	if(priv->enable_y2)
+	{
+		cairo_text_extents(cr, _(priv->y2_label), &extents);
+		extents.width += PADDING;
+		info_box_width = MAX(extents.width, info_box_width);
+	}
 
 	/* Get expected text width for bottom and right. This is based on the labels on the y-axis */
-	text = g_strdup_printf("00.0 %s", priv->x_unit);
+	text = get_value_as_text(0.0, priv->x_unit, priv->x_info_cb, priv->user_data);
 	cairo_text_extents(cr, text, &extents);
 	g_free(text);
 	text = NULL;
 	if(priv->enable_y2)
 	{
-		text = g_strdup_printf("00.0 %s", priv->y2_unit);
+		text = get_value_as_text(0.0, priv->y2_unit, priv->y2_info_cb, priv->user_data);
 		cairo_text_extents(cr, text, &extents2);
 		g_free(text);
 		text = NULL;
 		extents2.width += PADDING;
+		info_box_width = MAX(extents2.width, info_box_width);
 	}
 	else
 		extents2.width = 0;
 	extents.width += PADDING;
 	extents.height += PADDING;
+	info_box_width = MAX(extents.width, info_box_width);
 	priv->offset_bottom = extents.height + BORDER_OFFSET;
+	priv->info_box_width = info_box_width + 10 * BORDER_OFFSET;
 	priv->offset_right = extents.width / 2 + extents2.width + priv->info_box_width + BORDER_OFFSET;
 }
 
@@ -928,39 +943,42 @@ static void _print_text(cairo_t *cr, const char *text, const float x, const floa
 	cairo_show_text(cr, text);
 }
 
-static void _print_value_with_unit(cairo_t *cr, const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding)
+static gchar *get_value_as_text(const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data)
 {
 	gchar *text;
 	GValue *v;
-
-	if(isnan(value)) return;
-	v = NULL;
-
 	if(info_cb != NULL && unit != NULL) /* unit and info_cb are given */
 	{
 		v = info_cb(value, user_data);
 		text = g_strdup_printf("%s %s", g_value_get_string(v), unit);
-		_print_text(cr, text, x, y, m, padding);
 	}
 	else if(info_cb != NULL) /* only info_cb is given */
 	{
 		v = info_cb(value, user_data);
-		_print_text(cr, g_value_get_string(v), x, y, m, padding);
+		text = g_value_dup_string(v);
 	}
 	else if(unit != NULL) /* only unit is given */
 	{
 		text = g_strdup_printf("%.3G %s", value, unit);
-		_print_text(cr, text, x, y, m, padding);
 	}
 	else /* none are given */
 	{
 		text = g_strdup_printf("%.3G", value);
-		_print_text(cr, text, x, y, m, padding);
 	}
-
 	g_value_unset(v);
 	g_slice_free(GValue, v);
 
-	if(text != NULL) g_free(text);
+	return text;
+}
+
+static void _print_value_with_unit(cairo_t *cr, const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding)
+{
+	gchar *text;
+
+	if(isnan(value)) return;
+	text = get_value_as_text(value, unit, info_cb, user_data);
+	_print_text(cr, text, x, y, m, padding);
+
+	g_free(text);
 	text = NULL;
 }
