@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: libgchart 0.0.1\n"
+"Report-Msgid-Bugs-To: goedhart.martijn@gmail.com\n"
+"POT-Creation-Date: 2014-09-10 18:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gchart/g_chart.c:95
+msgid "title"
+msgstr ""
+
+#: gchart/g_chart.c:96
+msgid "Title of this chart."
+msgstr ""
+
+#: gchart/g_chart.c:101
+msgid "plot lines between points"
+msgstr ""
+
+#: gchart/g_chart.c:102
+msgid "Plot lines between points."
+msgstr ""
+
+#: gchart/g_chart.c:107
+msgid "plot dots at points"
+msgstr ""
+
+#: gchart/g_chart.c:108
+msgid "Plot dots at points."
+msgstr ""
+
+#: gchart/g_chart.c:113
+msgid "enable y2 axis"
+msgstr ""
+
+#: gchart/g_chart.c:114
+msgid "Enable the left axis."
+msgstr ""
+
+#: gchart/g_chart.c:119
+msgid "number of steps"
+msgstr ""
+
+#: gchart/g_chart.c:120
+msgid "Number of steps."
+msgstr ""
+
+#: gchart/g_chart.c:127
+msgid "size of a step"
+msgstr ""
+
+#: gchart/g_chart.c:128
+msgid "Size of a step."
+msgstr ""

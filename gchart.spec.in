@@ -1,0 +1,141 @@
+#
+# spec file for package @PACKAGE_NAME@
+#
+# @COPYRIGHT@
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+
+%define libName @PACKAGE_NAME@
+%define srcVersion @VERSION@
+%define currentVersion @LIBRARY_CURRENT_VERSION@
+
+Name:           @PROGRAM_NAME@
+Version:        @GIT_VERSION@
+Release:        0
+License:        @LICENSE_SHORT_RPM@
+Summary:        @PROGRAM_SUMMARY@
+Url:            @PACKAGE_HOMEPAGE@
+Group:          System/Libraries
+Source:         @PACKAGE_NAME@-@VERSION@.tar.xz
+BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(glib-2.0) >= 2.32
+BuildRequires:  pkgconfig(gobject-2.0) >= 2.38
+BuildRequires:  pkgconfig(gtk+-3.0)
+BuildRequires:  doxygen
+BuildRequires:  graphviz
+BuildRequires:  fdupes
+BuildRoot:      %{_tmppath}/%{name}-%{srcVersion}-build
+
+%description
+@PROGRAM_DESCRIPTION@
+
+
+%package -n %{libName}%{currentVersion}
+Summary:        @PROGRAM_SUMMARY@
+Group:          System/Libraries
+
+%description -n %{libName}%{currentVersion}
+@PROGRAM_DESCRIPTION@
+
+
+%package devel
+Summary:        Development files for @PACKAGE_NAME@
+Group:          Development/Sources
+Requires:       %{libName}%{currentVersion} = %{version}
+Requires:       glibc-devel
+Requires:       glib2-devel
+Requires:       pkgconfig
+Requires:       pkgconfig(glib-2.0) >= 2.32
+Requires:       pkgconfig(gobject-2.0) >= 2.38
+Requires:       pkgconfig(gtk+-3.0)
+
+%description devel
+Development files for @PACKAGE_NAME@.
+@PROGRAM_DESCRIPTION@
+
+
+%package devel-static
+Summary:        Development files for @PACKAGE_NAME@
+Group:          Development/Sources
+Provides:       %{name}-devel:%{_libdir}/%{libName}.a
+Requires:       %{name}-devel = %{version}
+
+%description devel-static
+Development files for @PACKAGE_NAME@.
+@PROGRAM_DESCRIPTION@
+
+
+%package docs
+Summary:	Documentation for @PACKAGE_NAME@
+Group:		Documentation/Other
+Requires:	%{libName}%{currentVersion} = %{version}
+
+%description docs
+Documentation for @PACKAGE_NAME@.
+@PROGRAM_DESCRIPTION@
+
+
+%package lang
+Summary:	Language files @PACKAGE_NAME@
+Group:		System/Localization
+Requires:	%{libName}%{currentVersion} = %{version}
+
+%description lang
+Language file for @PACKAGE_NAME@.
+@PROGRAM_DESCRIPTION@
+
+
+%prep
+%setup -q -n %{libName}-%{srcVersion}
+
+%build
+%configure --enable-docs
+make %{?_smp_mflags}
+
+%install
+%make_install
+mkdir %{buildroot}/usr/share/help
+%find_lang %{libName}
+%fdupes docs/html
+
+%post -n %{libName}%{currentVersion}
+/sbin/ldconfig
+
+%postun -n %{libName}%{currentVersion}
+/sbin/ldconfig
+
+
+%files -n %{libName}%{currentVersion}
+%defattr(-,root,root)
+%{_libdir}/%{libName}.so.*
+
+%files devel
+%defattr(-,root,root)
+%doc ChangeLog README COPYING AUTHORS
+/usr/include/%{name}/
+%_libdir/%{libName}.la
+%_libdir/%{libName}.so
+%{_libdir}/pkgconfig/%{libName}.pc
+%doc %_mandir/man3/*
+
+%files devel-static
+%defattr(-,root,root)
+%_libdir/%{libName}.a
+
+%files lang -f %{libName}.lang
+%defattr(-,root,root)
+%doc ChangeLog README COPYING AUTHORS
+
+%files docs
+%defattr(-,root,root)
+%doc ChangeLog README COPYING AUTHORS
+%doc docs/html
+
+%changelog

@@ -1,0 +1,31 @@
+
+                     GChart Library - version @PACKAGE_VERSION@
+
+  What is it?
+  -----------
+
+  @PROGRAM_DESCRIPTION@
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the project page under
+  @PACKAGE_HOMEPAGE@.
+
+  Documentation
+  -------------
+
+  This package includes a man page for detailed usage of this utility.
+  Furthermore more information cat be found at
+  @PACKAGE_HOMEPAGE@
+
+  Installation
+  ------------
+
+  Please see the file called INSTALL.
+
+  Licensing
+  ---------
+
+  This project is licensed under the @LICENSE@.
+  Please see the file called LICENSE for the full license text.
