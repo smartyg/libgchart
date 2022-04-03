@@ -41,6 +41,7 @@ AX_DEFINE_SUBST([PACKAGE_HOMEPAGE], [http://www.martijn-goedhart.nl/libgchart/],
 AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [1], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
+AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 
 # Checks for programs.
 AC_LANG_C
@@ -92,6 +93,11 @@ PKG_CHECK_MODULES([GTK], [gtk+-3.0])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])
+
+GOBJECT_INTROSPECTION_REQS=0.10.0
+GOBJECT_INTROSPECTION_CHECK([$GOBJECT_INTROSPECTION_REQS])
+
+GTK_DOC_CHECK([1.12])
 
 AC_DEFINE([_GNU_SOURCE], [1], [use gnu extensions])
 AC_DEFINE([_(s)], [dgettext(PROGRAM_NAME, s)], [use gnu extensions])
@@ -154,5 +160,5 @@ AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_CONDITIONAL([HAVE_DOT], [test -n "$DOT"])
 
-AC_CONFIG_FILES([Makefile po/Makefile.in docs/Doxyfile docs/Makefile libgchart.pc])
+AC_CONFIG_FILES([Makefile gchart/Makefile examples/Makefile po/Makefile.in docs/Doxyfile docs/Makefile libgchart.pc])
 AC_OUTPUT

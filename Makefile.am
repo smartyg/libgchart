@@ -39,42 +39,15 @@ endif
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgchart.pc
 
-## Define a libtool archive target "libexample-@EXAMPLE_API_VERSION@.la", with
-## @EXAMPLE_API_VERSION@ substituted into the generated Makefile at configure
-## time.
-## The libtool archive file (.la) will be installed into the directory named
-## by the predefined variable $(bindir), along with the actual shared library
-## file (.so).
-lib_LTLIBRARIES = libgchart.la
-
-## Define the source file list for the "libexample-@EXAMPLE_API_VERSION@.la"
-## target.  Note that @EXAMPLE_API_VERSION@ is not interpreted by Automake and
-## will therefore be treated as if it were literally part of the target name,
-## and the variable name derived from that.
-## Note that it is not necessary to list header files
-## which are already listed elsewhere in a _HEADERS variable assignment.
-libgchart_la_SOURCES = gchart/g_chart.c
-
-libgchart_la_CPPFLAGS = @GLIB_CFLAGS@ @GTK_CFLAGS@
-
-## Instruct libtool to include ABI version information in the generated shared
-## library file (.so).  The library ABI version is defined in configure.ac, so
-## that all version information is kept in one place.
-libgchart_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
-
-libgchart_la_LIBADD = @M_LIBS@ @GLIB_LIBS@ @GTK_LIBS@
-
-## Define the list of public header files and their install location.  The
-## nobase_ prefix instructs Automake to not strip the directory part from each
-## filename, in order to avoid the need to define separate file lists for each
-## installation directory.  This only works if the directory hierarchy in the
-## source tree matches the hierarchy at the install location, however.
-gchart_includedir = $(includedir)
-nobase_gchart_include_HEADERS = gchart/g_chart.h
-
 noinst_HEADERS = config.h
 
 EXTRA_DIST = VERSION @PROGRAM_NAME@.spec
+
+doc_DATA =                                      \
+	README                                      \
+	COPYING                                     \
+	AUTHORS                                     \
+	ChangeLog
 
 ## Only try to update the ChangeLog file when git is availible to report all the changes.
 if HAVE_GIT
@@ -92,4 +65,4 @@ distclean-local:
 	@rm -f ChangeLog VERSION
 endif
 
-SUBDIRS = po docs
+SUBDIRS = gchart po examples docs
