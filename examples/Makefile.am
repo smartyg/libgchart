@@ -17,7 +17,7 @@ chart_SOURCES =         \
     chart.c
 
 chart_CFLAGS =          \
-    -I$(top_srcdir)/gchart     \
+    -I$(top_srcdir)/src     \
     $(WARN_CFLAGS)          \
     $(DISABLE_DEPRECATED)   \
     $(LIBGCHART_CFLAGS)     \
@@ -26,7 +26,7 @@ chart_CFLAGS =          \
 chart_LDADD =           \
     $(LIBGCHART_LIBS)       \
     $(GTHREAD_LIBS)         \
-    $(top_builddir)/gchart/libgchart-@LIBRARY_API_VERSION@.la
+    $(top_builddir)/src/libgchart-@LIBRARY_API_VERSION@.la
 
 
 ## Misc

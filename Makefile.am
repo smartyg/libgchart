@@ -65,4 +65,4 @@ distclean-local:
 	@rm -f ChangeLog VERSION
 endif
 
-SUBDIRS = gchart examples docs
+SUBDIRS = src examples docs

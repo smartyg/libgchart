@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
 AC_INIT(libgchart, 0.1.0, goedhart.martijn@gmail.com)
-AC_CONFIG_SRCDIR([gchart/g_chart.c])
+AC_CONFIG_SRCDIR([src/g_chart.c])
 AC_CONFIG_HEADERS([config.h])
 AH_BOTTOM([#include <features.h>])
 
@@ -158,5 +158,5 @@ AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_CONDITIONAL([HAVE_DOT], [test -n "$DOT"])
 
-AC_CONFIG_FILES([Makefile gchart/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart.pc])
+AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart.pc])
 AC_OUTPUT
