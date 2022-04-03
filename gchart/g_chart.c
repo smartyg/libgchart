@@ -16,7 +16,7 @@
 #define UNUSED(x) (void)(x) ///< Used to indicate that a function does not use a certain parameter.
 
 typedef enum _text_mode text_mode_t;
-typedef struct _GChartPrivate GChartPrivate;
+typedef struct _GchartPrivate GchartPrivate;
 
 enum
 {
@@ -43,59 +43,59 @@ enum _text_mode
 	RIGHT_BOTTOM
 };
 
-struct _GChartPrivate
+struct _GchartPrivate
 {
 	float x_scale, y1_scale, y2_scale, offset_left, offset_right, offset_top, offset_bottom, info_box_width;
 	float x_min, x_max, y1_min, y1_max, y2_min, y2_max, x_info_value;
 	gchar *title, *x_label, *y1_label, *y2_label, *x_unit, *y1_unit, *y2_unit;
 	gboolean plot_lines, plot_dots, enable_y2;
-	chart_value_to_info_string_t x_info_cb, y1_info_cb, y2_info_cb;
+	GchartValueToInfoString x_info_cb, y1_info_cb, y2_info_cb;
 	gconstpointer user_data;
 
 	/* callbacks for point plotting */
-	chart_get_value_t x_cb, y1_cb, y2_cb;
+	GchartGetValue x_cb, y1_cb, y2_cb;
 
 	/* callbacks for lineplotting */
-	chart_range_value_t x_min_value_cb, x_max_value_cb, y1_min_value_cb, y1_max_value_cb, y2_min_value_cb, y2_max_value_cb;
+	GchartRangeValue x_min_value_cb, x_max_value_cb, y1_min_value_cb, y1_max_value_cb, y2_min_value_cb, y2_max_value_cb;
 	guint n_steps;
 	float step_size;
 	float zoom, x_center;
-	chart_action_t on_mouse_over_cb;
-	chart_action_t on_mouse_click_cb;
+	GchartAction on_mouse_over_cb;
+	GchartAction on_mouse_click_cb;
 };
 
 /* Declaration of the callback functions. */
-static gboolean _chart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data);
-static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
-static gboolean _chart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
+static gboolean _gchart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data);
+static gboolean _gchart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
+static gboolean _gchart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data);
 
-static void g_chart_dispose(GObject *object);
-static void g_chart_finalize(GObject *object);
-static void g_chart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
-static void g_chart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
-inline static float _get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event);
-inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv);
-static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv);
-static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv);
-inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const guint width, const guint height);
-inline static void _draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2);
-inline static void _draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double y2);
-inline static void _draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double x2);
-inline static void _set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap);
-static void _print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding);
-static gchar *get_value_as_text(const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data);
-static void _print_value_with_unit(cairo_t *cr, const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding);
+static void gchart_dispose(GObject *object);
+static void gchart_finalize(GObject *object);
+static void gchart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
+static void gchart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
+inline static float _gchart_get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event);
+inline static void _gchart_update_offsets(cairo_t *cr, GchartPrivate *priv);
+static void _gchart_draw_info(GtkWidget *widget, cairo_t *cr, const GchartPrivate *priv);
+static void _gchart_draw(GtkWidget *widget, cairo_t *cr, GchartPrivate *priv);
+inline static void _gchart_draw_raster(cairo_t *cr, const GchartPrivate *priv, const guint width, const guint height);
+inline static void _gchart_draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2);
+inline static void _gchart_draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double y2);
+inline static void _gchart_draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double x2);
+inline static void _gchart_set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap);
+static void _gchart_print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding);
+static gchar *_gchart_get_value_as_text(const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data);
+static void _gchart_print_value_with_unit(cairo_t *cr, const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding);
 
-G_DEFINE_TYPE_WITH_PRIVATE(GChart, g_chart, GTK_TYPE_DRAWING_AREA);
+G_DEFINE_TYPE_WITH_PRIVATE(Gchart, gchart, GTK_TYPE_DRAWING_AREA);
 
-static void g_chart_class_init(GChartClass *klass)
+static void gchart_class_init(GchartClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
-	gobject_class->dispose = g_chart_dispose;
-	gobject_class->finalize = g_chart_finalize;
-	gobject_class->set_property = g_chart_set_property;
-	gobject_class->get_property = g_chart_get_property;
+	gobject_class->dispose = gchart_dispose;
+	gobject_class->finalize = gchart_finalize;
+	gobject_class->set_property = gchart_set_property;
+	gobject_class->get_property = gchart_get_property;
 
 	g_object_class_install_property(gobject_class, PROP_TITLE, g_param_spec_string("title",
 		_("title"),
@@ -138,9 +138,9 @@ static void g_chart_class_init(GChartClass *klass)
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
-static void g_chart_init(GChart *self)
+static void gchart_init(Gchart *self)
 {
-	GChartPrivate *priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv = gchart_get_instance_private(self);
 
 	priv->x_scale = priv->y1_scale = priv->y2_scale = priv->x_info_value = 0;
 	priv->offset_left = priv->offset_top = priv->offset_bottom = priv->offset_right = FLT_MIN;
@@ -173,20 +173,20 @@ static void g_chart_init(GChart *self)
 	gtk_widget_add_events(GTK_WIDGET(self), GDK_BUTTON_PRESS_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
 
 	/* Connect the draw and motion signals. */
-	g_signal_connect(G_OBJECT(self), "draw", G_CALLBACK(_chart_draw_cb), NULL);
-	g_signal_connect(G_OBJECT(self), "motion-notify-event", G_CALLBACK(_chart_cursor_move_cb), NULL);
-	g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(_chart_cursor_click_cb), NULL);
+	g_signal_connect(G_OBJECT(self), "draw", G_CALLBACK(_gchart_draw_cb), NULL);
+	g_signal_connect(G_OBJECT(self), "motion-notify-event", G_CALLBACK(_gchart_cursor_move_cb), NULL);
+	g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(_gchart_cursor_click_cb), NULL);
 }
 
-static void g_chart_dispose(GObject *object)
+static void gchart_dispose(GObject *object)
 {
-	G_OBJECT_CLASS(g_chart_parent_class)->dispose(object);
+	G_OBJECT_CLASS(gchart_parent_class)->dispose(object);
 }
 
-static void g_chart_finalize(GObject *object)
+static void gchart_finalize(GObject *object)
 {
-	GChart *self = G_CHART(object);
-	GChartPrivate *priv = g_chart_get_instance_private(self);
+	Gchart *self = GCHART_CAST(object);
+	GchartPrivate *priv = gchart_get_instance_private(self);
 
 	g_free(priv->x_label);
 	g_free(priv->y1_label);
@@ -200,13 +200,13 @@ static void g_chart_finalize(GObject *object)
 	 * Always chain up to the parent class; as with dispose(), finalize()
 	 * is guaranteed to exist on the parent's class virtual function table
 	 */
-	G_OBJECT_CLASS(g_chart_parent_class)->finalize(object);
+	G_OBJECT_CLASS(gchart_parent_class)->finalize(object);
 }
 
-static void g_chart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
+static void gchart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
 {
-	GChart *self = G_CHART(object);
-	GChartPrivate *priv = g_chart_get_instance_private(self);
+	Gchart *self = GCHART_CAST(object);
+	GchartPrivate *priv = gchart_get_instance_private(self);
 
 	switch(property_id)
 	{
@@ -244,20 +244,20 @@ static void g_chart_set_property(GObject *object, guint property_id, const GValu
 	}
 }
 
-GChart *g_chart_new(void)
+Gchart *gchart_new(void)
 {
-	return g_object_new(G_TYPE_CHART, NULL);
+	return g_object_new(GCHART_TYPE, NULL);
 }
 
-void g_chart_free(GChart *self)
+void gchart_free(Gchart *self)
 {
 	g_object_unref(self);
 }
 
-static void g_chart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
+static void gchart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
 {
-	GChart *self = G_CHART(object);
-	GChartPrivate *priv = g_chart_get_instance_private(self);
+	Gchart *self = GCHART_CAST(object);
+	GchartPrivate *priv = gchart_get_instance_private(self);
 
 	switch(property_id)
 	{
@@ -286,16 +286,16 @@ static void g_chart_get_property(GObject *object, guint property_id, GValue *val
 	}
 }
 
-gboolean g_chart_set_from_definition(GChart *self, const chart_def_t *cd, gconstpointer user_data)
+gboolean gchart_set_from_definition(Gchart *self, const GchartDef *cd, gconstpointer user_data)
 {
-	GChartPrivate *priv;
+	GchartPrivate *priv;
 
-	g_return_val_if_fail(G_IS_CHART(self), FALSE);
+	g_return_val_if_fail(GCHART_IS_CHART(self), FALSE);
 
 	if(cd == NULL || cd->y1_value_cb == NULL || (cd->n_y_axis == 2 && cd->y2_value_cb == NULL))
 		return FALSE;
 
-	priv = g_chart_get_instance_private(self);
+	priv = gchart_get_instance_private(self);
 
 	g_free(priv->title);
 	priv->title = g_strdup(cd->title);
@@ -341,60 +341,60 @@ gboolean g_chart_set_from_definition(GChart *self, const chart_def_t *cd, gconst
 	return TRUE;
 }
 
-void g_chart_enable_y2_axis(GChart *self, gboolean enable)
+void gchart_enable_y2_axis(Gchart *self, gboolean enable)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->enable_y2 = enable;
 }
 
-void g_chart_plot_lines(GChart *self, gboolean lines)
+void gchart_plot_lines(Gchart *self, gboolean lines)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->plot_lines = lines;
 }
 
-void g_chart_plot_dots(GChart *self, gboolean dots)
+void gchart_plot_dots(Gchart *self, gboolean dots)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->plot_dots = dots;
 }
 
-gconstpointer g_chart_get_user_data(GChart *self)
+gconstpointer gchart_get_user_data(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), NULL);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
+	priv = gchart_get_instance_private(self);
 	return priv->user_data;
 }
 
-void g_chart_set_user_data(GChart *self, gconstpointer user_data)
+void gchart_set_user_data(Gchart *self, gconstpointer user_data)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->user_data = user_data;
 }
 
-void g_chart_set_title(GChart *self, const gchar *title)
+void gchart_set_title(Gchart *self, const gchar *title)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	g_free(priv->title);
 	priv->title = g_strdup(title);
 }
 
-void g_chart_set_x_functions(GChart *self, const gchar *x_label, const gchar *x_unit, chart_value_to_info_string_t x_info_cb, chart_get_value_t x_value_cb)
+void gchart_set_x_functions(Gchart *self, const gchar *x_label, const gchar *x_unit, GchartValueToInfoString x_info_cb, GchartGetValue x_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	g_free(priv->x_label);
 	priv->x_label = g_strdup(x_label);
 	g_free(priv->x_unit);
@@ -403,11 +403,11 @@ void g_chart_set_x_functions(GChart *self, const gchar *x_label, const gchar *x_
 	priv->x_cb = x_value_cb;
 }
 
-void g_chart_set_y1_functions(GChart *self, const gchar *y1_label, const gchar *y1_unit, chart_value_to_info_string_t y1_info_cb, chart_get_value_t y1_value_cb)
+void gchart_set_y1_functions(Gchart *self, const gchar *y1_label, const gchar *y1_unit, GchartValueToInfoString y1_info_cb, GchartGetValue y1_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	g_free(priv->y1_label);
 	priv->y1_label = g_strdup(y1_label);
 	g_free(priv->y1_unit);
@@ -416,11 +416,11 @@ void g_chart_set_y1_functions(GChart *self, const gchar *y1_label, const gchar *
 	priv->y1_cb = y1_value_cb;
 }
 
-void g_chart_set_y2_functions(GChart *self, const gchar *y2_label, const gchar *y2_unit, chart_value_to_info_string_t y2_info_cb, chart_get_value_t y2_value_cb)
+void g_chart_set_y2_functions(Gchart *self, const gchar *y2_label, const gchar *y2_unit, GchartValueToInfoString y2_info_cb, GchartGetValue y2_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	g_free(priv->y2_label);
 	priv->y2_label = g_strdup(y2_label);
 	g_free(priv->y2_unit);
@@ -429,169 +429,169 @@ void g_chart_set_y2_functions(GChart *self, const gchar *y2_label, const gchar *
 	priv->y2_cb = y2_value_cb;
 }
 
-void g_chart_set_x_limits(GChart *self, const float x_min, const float x_max)
+void gchart_set_x_limits(Gchart *self, const float x_min, const float x_max)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->x_min = x_min;
 	priv->x_max = x_max;
 }
 
-void g_chart_set_y1_limits(GChart *self, const float y1_min, const float y1_max)
+void gchart_set_y1_limits(Gchart *self, const float y1_min, const float y1_max)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->y1_min = y1_min;
 	priv->y1_max = y1_max;
 }
 
-void g_chart_set_y2_limits(GChart *self, const float y2_min, const float y2_max)
+void gchart_set_y2_limits(Gchart *self, const float y2_min, const float y2_max)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->y2_min = y2_min;
 	priv->y2_max = y2_max;
 }
 
-void g_chart_set_x_limits_functions(GChart *self, chart_range_value_t x_min_value_cb, chart_range_value_t x_max_value_cb)
+void gchart_set_x_limits_functions(Gchart *self, GchartRangeValue x_min_value_cb, GchartRangeValue x_max_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->x_min_value_cb = x_min_value_cb;
 	priv->x_max_value_cb = x_max_value_cb;
 }
 
-void g_chart_set_y1_limits_functions(GChart *self, chart_range_value_t y1_min_value_cb, chart_range_value_t y1_max_value_cb)
+void gchart_set_y1_limits_functions(Gchart *self, GchartRangeValue y1_min_value_cb, GchartRangeValue y1_max_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->y1_min_value_cb = y1_min_value_cb;
 	priv->y1_max_value_cb = y1_max_value_cb;
 }
 
-void g_chart_set_y2_limits_functions(GChart *self, chart_range_value_t y2_min_value_cb, chart_range_value_t y2_max_value_cb)
+void gchart_set_y2_limits_functions(Gchart *self, GchartRangeValue y2_min_value_cb, GchartRangeValue y2_max_value_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->y2_min_value_cb = y2_min_value_cb;
 	priv->y2_max_value_cb = y2_max_value_cb;
 }
 
-void g_chart_set_n_steps(GChart *self, const unsigned int n_steps)
+void gchart_set_n_steps(Gchart *self, const unsigned int n_steps)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->n_steps = n_steps;
 }
 
-unsigned int g_chart_get_n_steps(GChart *self)
+unsigned int gchart_get_n_steps(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), 0);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), 0);
+	priv = gchart_get_instance_private(self);
 	return priv->n_steps;
 }
 
-void g_chart_set_zoom(GChart *self, const float zoom, const float center)
+void gchart_set_zoom(Gchart *self, const float zoom, const float center)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
 	g_return_if_fail(zoom >= 1.0f);
-	priv = g_chart_get_instance_private(self);
+	priv = gchart_get_instance_private(self);
 
 	priv->zoom = zoom;
 	if(isfinite(center))
 		priv->x_center = center;
 }
 
-float g_chart_get_zoom(GChart *self)
+float gchart_get_zoom(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), NAN);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), NAN);
+	priv = gchart_get_instance_private(self);
 	return priv->zoom;
 }
 
-float g_chart_get_center(GChart *self)
+float gchart_get_center(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), NAN);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), NAN);
+	priv = gchart_get_instance_private(self);
 	return priv->x_center;
 }
 
-void g_chart_set_on_mouse_over_function(GChart *self, chart_action_t on_mouse_over_cb)
+void gchart_set_on_mouse_over_function(Gchart *self, GchartAction on_mouse_over_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->on_mouse_over_cb = on_mouse_over_cb;
 }
 
-chart_action_t g_chart_get_on_mouse_over_function(GChart *self)
+GchartAction gchart_get_on_mouse_over_function(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), NULL);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
+	priv = gchart_get_instance_private(self);
 	return priv->on_mouse_over_cb;
 }
 
-void g_chart_set_on_mouse_click_function(GChart *self, chart_action_t on_mouse_click_cb)
+void gchart_set_on_mouse_click_function(Gchart *self, GchartAction on_mouse_click_cb)
 {
-	GChartPrivate *priv;
-	g_return_if_fail(G_IS_CHART(self));
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_if_fail(GCHART_IS_CHART(self));
+	priv = gchart_get_instance_private(self);
 	priv->on_mouse_click_cb = on_mouse_click_cb;
 }
 
-chart_action_t g_chart_get_on_mouse_click_function(GChart *self)
+GchartAction gchart_get_on_mouse_click_function(Gchart *self)
 {
-	GChartPrivate *priv;
-	g_return_val_if_fail(G_IS_CHART(self), NULL);
-	priv = g_chart_get_instance_private(self);
+	GchartPrivate *priv;
+	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
+	priv = gchart_get_instance_private(self);
 	return priv->on_mouse_click_cb;
 }
 
-static float _get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event)
+static float _gchart_get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event)
 {
 	guint width, height;
-	GChartPrivate *priv;
+	GchartPrivate *priv;
 
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
-	priv = g_chart_get_instance_private(G_CHART(widget));
+	priv = gchart_get_instance_private(GCHART_CAST(widget));
 
 	if(event->x > priv->offset_left && event->x < width - priv->offset_right && event->y > priv->offset_top && event->y < height - priv->offset_bottom)
 		return (event->x - priv->offset_left) / priv->x_scale + priv->x_min;
 	return NAN;
 }
 
-static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+static gboolean _gchart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
 {
 	UNUSED(user_data);
 
 	GdkWindow *window;
-	GChartPrivate *priv;
+	GchartPrivate *priv;
 	cairo_region_t *r;
 	cairo_rectangle_int_t *rect;
 	guint width, height;
 	float x_info_value_old;
 
-	priv = g_chart_get_instance_private(G_CHART(widget));
+	priv = gchart_get_instance_private(GCHART_CAST(widget));
 
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
 
 	/* Save the old info value, so it can be compared to the new one. */
 	x_info_value_old = priv->x_info_value;
-	priv->x_info_value = _get_x_value_mouse(widget, event);
+	priv->x_info_value = _gchart_get_x_value_mouse(widget, event);
 
 	/* If the mouse changed on the x axis, call the on mouse over callback. */
 	if(priv->on_mouse_over_cb != NULL && !isnan(priv->x_info_value) && (isnan(x_info_value_old) || priv->x_info_value != x_info_value_old))
@@ -613,30 +613,30 @@ static gboolean _chart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, 
 	return TRUE;
 }
 
-static gboolean _chart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
+static gboolean _gchart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
 {
 	UNUSED(user_data);
 
 	float x_value;
-	GChartPrivate *priv;
+	GchartPrivate *priv;
 
-	priv = g_chart_get_instance_private(G_CHART(widget));
+	priv = gchart_get_instance_private(GCHART_CAST(widget));
 	if(priv->on_mouse_click_cb != NULL)
 	{
-		if(!isnan((x_value = _get_x_value_mouse(widget, event))))
+		if(!isnan((x_value = _gchart_get_x_value_mouse(widget, event))))
 			priv->on_mouse_click_cb(x_value, priv->user_data);
 	}
 	return TRUE;
 }
 
-inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv)
+inline static void _gchart_update_offsets(cairo_t *cr, GchartPrivate *priv)
 {
 	/* Get expected text width for the top and left. This is based on the labels on the y-axis */
 	cairo_text_extents_t extents, extents2;
 	gchar *text;
 	float info_box_width;
 
-	text = get_value_as_text(0.0, priv->y1_unit, priv->y1_info_cb, priv->user_data);
+	text = _gchart_get_value_as_text(0.0, priv->y1_unit, priv->y1_info_cb, priv->user_data);
 	cairo_text_extents(cr, text, &extents);
 	g_free(text);
 	text = NULL;
@@ -663,13 +663,13 @@ inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv)
 	}
 
 	/* Get expected text width for bottom and right. This is based on the labels on the y-axis */
-	text = get_value_as_text(0.0, priv->x_unit, priv->x_info_cb, priv->user_data);
+	text = _gchart_get_value_as_text(0.0, priv->x_unit, priv->x_info_cb, priv->user_data);
 	cairo_text_extents(cr, text, &extents);
 	g_free(text);
 	text = NULL;
 	if(priv->enable_y2)
 	{
-		text = get_value_as_text(0.0, priv->y2_unit, priv->y2_info_cb, priv->user_data);
+		text = _gchart_get_value_as_text(0.0, priv->y2_unit, priv->y2_info_cb, priv->user_data);
 		cairo_text_extents(cr, text, &extents2);
 		g_free(text);
 		text = NULL;
@@ -686,23 +686,23 @@ inline static void _chart_update_offsets(cairo_t *cr, GChartPrivate *priv)
 	priv->offset_right = extents.width / 2 + extents2.width + priv->info_box_width + BORDER_OFFSET;
 }
 
-static gboolean _chart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data)
+static gboolean _gchart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	UNUSED(user_data);
 
-	GChartPrivate *priv = g_chart_get_instance_private(G_CHART(widget));
+	GchartPrivate *priv = gchart_get_instance_private(GCHART_CAST(widget));
 	if(priv->offset_left == FLT_MIN || priv->offset_right == FLT_MIN || priv->offset_top == FLT_MIN || priv->offset_bottom == FLT_MIN)
-		_chart_update_offsets(cr, priv);
+		_gchart_update_offsets(cr, priv);
 
-	_chart_draw(widget, cr, priv);
+	_gchart_draw(widget, cr, priv);
 
 	if(!isnan(priv->x_info_value))
-		_draw_info(widget, cr, priv);
+		_gchart_draw_info(widget, cr, priv);
 
 	return FALSE;
 }
 
-static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv)
+static void _gchart_draw_info(GtkWidget *widget, cairo_t *cr, const GchartPrivate *priv)
 {
 	guint width, height;
 	float h, offset, x_value, n;
@@ -725,8 +725,8 @@ static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv
 
 		/* Y2 info */
 		cairo_set_source_rgba(cr, 0, 0, 0, 1);
-		_print_text(cr, priv->y2_label, width - (priv->info_box_width / 2), 1.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
-		_print_value_with_unit(cr, priv->y2_cb(priv->x_info_value, priv->user_data), priv->y2_unit, priv->y2_info_cb, priv->user_data, width - (priv->info_box_width / 2), 1.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
+		_gchart_print_text(cr, priv->y2_label, width - (priv->info_box_width / 2), 1.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
+		_gchart_print_value_with_unit(cr, priv->y2_cb(priv->x_info_value, priv->user_data), priv->y2_unit, priv->y2_info_cb, priv->user_data, width - (priv->info_box_width / 2), 1.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
 		cairo_set_source_rgba(cr, 0, 0.6, 0, 1);
 		cairo_move_to(cr, width - (priv->info_box_width / 4) * 3, 1.5 * h + offset + 7);
 		cairo_line_to(cr, width - (priv->info_box_width / 4), 1.5 * h + offset + 7);
@@ -737,8 +737,8 @@ static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv
 
 	/* Y1 info */
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
-	_print_text(cr, priv->y1_label, width - (priv->info_box_width / 2), 0.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
-	_print_value_with_unit(cr, priv->y1_cb(priv->x_info_value, priv->user_data), priv->y1_unit, priv->y1_info_cb, priv->user_data, width - (priv->info_box_width / 2), 0.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
+	_gchart_print_text(cr, priv->y1_label, width - (priv->info_box_width / 2), 0.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
+	_gchart_print_value_with_unit(cr, priv->y1_cb(priv->x_info_value, priv->user_data), priv->y1_unit, priv->y1_info_cb, priv->user_data, width - (priv->info_box_width / 2), 0.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
 	cairo_set_source_rgba(cr, 1, 0, 0, 1);
 	cairo_move_to(cr, width - (priv->info_box_width / 4) * 3, 0.5 * h + offset + 7);
 	cairo_line_to(cr, width - (priv->info_box_width / 4), 0.5 * h + offset + 7);
@@ -750,13 +750,13 @@ static void _draw_info(GtkWidget *widget, cairo_t *cr, const GChartPrivate *priv
 	else
 		x_value = priv->x_info_value;
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
-	_print_text(cr, priv->x_label, width - (priv->info_box_width / 2), n * h - offset, MIDDLE_BOTTOM, PADDING / 2);
-	_print_value_with_unit(cr, x_value, priv->x_unit, priv->x_info_cb, priv->user_data, width - (priv->info_box_width / 2), n * h + offset, MIDDLE_BOTTOM, PADDING / 2);
+	_gchart_print_text(cr, priv->x_label, width - (priv->info_box_width / 2), n * h - offset, MIDDLE_BOTTOM, PADDING / 2);
+	_gchart_print_value_with_unit(cr, x_value, priv->x_unit, priv->x_info_cb, priv->user_data, width - (priv->info_box_width / 2), n * h + offset, MIDDLE_BOTTOM, PADDING / 2);
 
 	cairo_fill(cr);
 }
 
-static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv)
+static void _gchart_draw(GtkWidget *widget, cairo_t *cr, GchartPrivate *priv)
 {
 	float step_size, x_value, x_min_real, x_max_real;
 	guint width, height;
@@ -857,13 +857,13 @@ static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv)
 	if(priv->enable_y2)
 		priv->y2_scale = (height - priv->offset_top - priv->offset_bottom) / (priv->y2_max - priv->y2_min);
 
-	_draw_raster(cr, priv, width, height);
+	_gchart_draw_raster(cr, priv, width, height);
 
 	if(priv->x_min == priv->x_max) return;
 
 	cairo_set_source_rgba(cr, 1, 0, 0, 1);
 	cairo_set_dash(cr, NULL, 0, 0);
-	_set_line_atributes(cr, 0.5, CAIRO_LINE_JOIN_ROUND, CAIRO_LINE_CAP_ROUND);
+	_gchart_set_line_atributes(cr, 0.5, CAIRO_LINE_JOIN_ROUND, CAIRO_LINE_CAP_ROUND);
 
 	for(x_value = priv->x_min; x_value <= priv->x_max; x_value += step_size)
 	{
@@ -927,7 +927,7 @@ static void _chart_draw(GtkWidget *widget, cairo_t *cr, GChartPrivate *priv)
 	return;
 }
 
-inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const guint width, const guint height)
+inline static void _gchart_draw_raster(cairo_t *cr, const GchartPrivate *priv, const guint width, const guint height)
 {
 	cairo_text_extents_t extents;
 	int x_lines, y_lines, j;
@@ -950,7 +950,7 @@ inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const gu
 		cairo_line_to(cr, width - priv->offset_right, priv->offset_top);
 	}
 
-	_set_line_atributes(cr, 1, CAIRO_LINE_JOIN_MITER, CAIRO_LINE_CAP_BUTT);
+	_gchart_set_line_atributes(cr, 1, CAIRO_LINE_JOIN_MITER, CAIRO_LINE_CAP_BUTT);
 	cairo_stroke(cr);
 
 	cairo_text_extents(cr, "0", &extents);
@@ -961,34 +961,34 @@ inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const gu
 	{
 		double x = j * ((width - priv->offset_left - priv->offset_right) / x_lines) + priv->offset_left;
 		double value = j * ((priv->x_max - priv->x_min) / x_lines) + priv->x_min;
-		_draw_sub_line_vertical(cr, value, priv->x_unit, priv->x_info_cb, priv->user_data, x, height - priv->offset_bottom, priv->offset_top);
+		_gchart_draw_sub_line_vertical(cr, value, priv->x_unit, priv->x_info_cb, priv->user_data, x, height - priv->offset_bottom, priv->offset_top);
 	}
 
 	for(j = 1; j < y_lines; j++)
 	{
 		double y = height - priv->offset_bottom - j * ((height - priv->offset_top - priv->offset_bottom) / y_lines);
 		double value = j * ((priv->y1_max - priv->y1_min) / y_lines) + priv->y1_min;
-		_draw_sub_line_horizontal(cr, value, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, y, width - priv->offset_right);
+		_gchart_draw_sub_line_horizontal(cr, value, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, y, width - priv->offset_right);
 	}
 
 	/* draw the first and last labels on the X axis */
-	_print_value_with_unit(cr, priv->x_min, priv->x_unit, priv->x_info_cb, priv->user_data, priv->offset_left, height - priv->offset_bottom, MIDDLE_TOP, 5);
-	_print_value_with_unit(cr, priv->x_max, priv->x_unit, priv->x_info_cb, priv->user_data, width - priv->offset_right, height - priv->offset_bottom, MIDDLE_TOP, 5);
+	_gchart_print_value_with_unit(cr, priv->x_min, priv->x_unit, priv->x_info_cb, priv->user_data, priv->offset_left, height - priv->offset_bottom, MIDDLE_TOP, 5);
+	_gchart_print_value_with_unit(cr, priv->x_max, priv->x_unit, priv->x_info_cb, priv->user_data, width - priv->offset_right, height - priv->offset_bottom, MIDDLE_TOP, 5);
 
 	/* draw the first and last labels on the Y1 axis */
-	_print_value_with_unit(cr, priv->y1_min, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, height - priv->offset_bottom, RIGHT_MIDDLE, 5);
-	_print_value_with_unit(cr, priv->y1_max, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, priv->offset_top, RIGHT_MIDDLE, 5);
+	_gchart_print_value_with_unit(cr, priv->y1_min, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, height - priv->offset_bottom, RIGHT_MIDDLE, 5);
+	_gchart_print_value_with_unit(cr, priv->y1_max, priv->y1_unit, priv->y1_info_cb, priv->user_data, priv->offset_left, priv->offset_top, RIGHT_MIDDLE, 5);
 
 	if(priv->enable_y2)
 	{
 		/* draw the first and last labels on the Y2 axis */
-		_print_value_with_unit(cr, priv->y1_max, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, height - priv->offset_bottom, LEFT_MIDDLE, 5);
-		_print_value_with_unit(cr, priv->y2_max, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, priv->offset_top, LEFT_MIDDLE, 5);
+		_gchart_print_value_with_unit(cr, priv->y1_max, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, height - priv->offset_bottom, LEFT_MIDDLE, 5);
+		_gchart_print_value_with_unit(cr, priv->y2_max, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, priv->offset_top, LEFT_MIDDLE, 5);
 		for(j = 1; j < y_lines; j++)
 		{
 			double y = height - priv->offset_bottom - j * ((height - priv->offset_top - priv->offset_bottom) / y_lines);
 			double value = j * ((priv->y2_max - priv->y2_min) / y_lines) + priv->y2_min;
-			_print_value_with_unit(cr, value, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, y, LEFT_MIDDLE, 5);
+			_gchart_print_value_with_unit(cr, value, priv->y2_unit, priv->y2_info_cb, priv->user_data, width - priv->offset_right, y, LEFT_MIDDLE, 5);
 		}
 	}
 
@@ -996,35 +996,35 @@ inline static void _draw_raster(cairo_t *cr, const GChartPrivate *priv, const gu
 	cairo_fill(cr);
 }
 
-inline static void _draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2)
+inline static void _gchart_draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2)
 {
 	const double dashes[] = {6.0};
 	cairo_set_source_rgba(cr, 0, 0, 0, 0.8);
-	_set_line_atributes(cr, 0.25, CAIRO_LINE_JOIN_MITER, CAIRO_LINE_CAP_BUTT);
+	_gchart_set_line_atributes(cr, 0.25, CAIRO_LINE_JOIN_MITER, CAIRO_LINE_CAP_BUTT);
 	cairo_set_dash(cr, dashes, 1, 0);
 	cairo_move_to(cr, x1, y1);
 	cairo_line_to(cr, x2, y2);
 }
 
-inline static void _draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double y2)
+inline static void _gchart_draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double y2)
 {
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
-	_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, MIDDLE_TOP, 5);
-	_draw_sub_line(cr, x1, y1, x1, y2);
+	_gchart_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, MIDDLE_TOP, 5);
+	_gchart_draw_sub_line(cr, x1, y1, x1, y2);
 	cairo_stroke(cr);
 	cairo_fill(cr);
 }
 
-inline static void _draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const double x1, const double y1, const double x2)
+inline static void _gchart_draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double x2)
 {
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
-	_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, RIGHT_MIDDLE, 5);
-	_draw_sub_line(cr, x1, y1, x2, y1);
+	_gchart_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, RIGHT_MIDDLE, 5);
+	_gchart_draw_sub_line(cr, x1, y1, x2, y1);
 	cairo_stroke(cr);
 	cairo_fill(cr);
 }
 
-inline static void _set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap)
+inline static void _gchart_set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap)
 {
 	cairo_set_line_width(cr, width);
 	cairo_set_line_join(cr, line_join);
@@ -1032,16 +1032,18 @@ inline static void _set_line_atributes(cairo_t *cr, const double width, const ca
 }
 
 /**
+ * _gchart_print_text:
+ * @cr: Cairo drawing area.
+ * @text: The text to be printed.
+ * @x: X coordinate of the drawing position.
+ * @y: Y coordinate of the drawing position.
+ * @m: Position of the text with respect to the x and y coordinate, must be one of the nine positions, @see text_mode_t.
+ * @padding: Reserve this amount of padding around the text.
+ *
  * Prints text on the drawing surface.
  * The text position is
- * @param[in] cr
- * @param[in] text	The text to be printed.
- * @param[in] x		X coordinate of the drawing position.
- * @param[in] y		Y coordinate of the drawing position.
- * @param[in] m		Position of the text with respect to the x and y coordinate, must be one of the nine positions, @see text_mode_t.
- * @param[in] padding	Reserve this amount of padding around the text.
  */
-static void _print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding)
+static void _gchart_print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding)
 {
 	float x_new, y_new;
 	cairo_text_extents_t extents;
@@ -1091,7 +1093,7 @@ static void _print_text(cairo_t *cr, const char *text, const float x, const floa
 	cairo_show_text(cr, text);
 }
 
-static gchar *get_value_as_text(const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data)
+static gchar *_gchart_get_value_as_text(const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data)
 {
 	gchar *text;
 	GValue *v;
@@ -1122,13 +1124,13 @@ static gchar *get_value_as_text(const float value, const char *unit, const chart
 	return text;
 }
 
-static void _print_value_with_unit(cairo_t *cr, const float value, const char *unit, const chart_value_to_info_string_t info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding)
+static void _gchart_print_value_with_unit(cairo_t *cr, const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding)
 {
 	gchar *text;
 
 	if(isnan(value)) return;
-	text = get_value_as_text(value, unit, info_cb, user_data);
-	_print_text(cr, text, x, y, m, padding);
+	text = _gchart_get_value_as_text(value, unit, info_cb, user_data);
+	_gchart_print_text(cr, text, x, y, m, padding);
 
 	g_free(text);
 	text = NULL;
