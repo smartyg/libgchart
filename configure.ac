@@ -9,8 +9,6 @@ AH_BOTTOM([#include <features.h>])
 AC_CANONICAL_BUILD
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign dist-xz])
-AM_GNU_GETTEXT_VERSION([0.18.3])
-AM_GNU_GETTEXT([external])
 
 # AX_DEFINE_SUBST(NAME, VALUE, DESCRIPTION)
 # -----------------------------------------
@@ -160,5 +158,5 @@ AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_CONDITIONAL([HAVE_DOT], [test -n "$DOT"])
 
-AC_CONFIG_FILES([Makefile gchart/Makefile examples/Makefile po/Makefile.in docs/Doxyfile docs/Makefile libgchart.pc])
+AC_CONFIG_FILES([Makefile gchart/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart.pc])
 AC_OUTPUT
