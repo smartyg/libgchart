@@ -118,44 +118,44 @@ static void gchart_class_init(GchartClass *klass)
 	gobject_class->get_property = gchart_get_property;
 
 	g_object_class_install_property(gobject_class, PROP_TITLE, g_param_spec_string("title",
-		"title",
-		"Title of this chart.",
-		NULL,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																				   "title",
+																				   "Title of this chart.",
+																				   NULL,
+																				   G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_PLOT_LINES, g_param_spec_boolean("plot-lines",
-		"plot lines between points",
-		"Plot lines between points.",
-		TRUE,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																						 "plot lines between points",
+																						 "Plot lines between points.",
+																						 TRUE,
+																						 G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_PLOT_DOTS, g_param_spec_boolean("plot-dots",
-		"plot dots at points",
-		"Plot dots at points.",
-		FALSE,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																						"plot dots at points",
+																						"Plot dots at points.",
+																						FALSE,
+																						G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_ENABLE_Y2, g_param_spec_boolean("enable-y2",
-		"enable y2 axis",
-		"Enable the left axis.",
-		FALSE,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																						"enable y2 axis",
+																						"Enable the left axis.",
+																						 FALSE,
+																						 G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_N_STEPS, g_param_spec_uint("n-steps",
-		"number of steps",
-		"Number of steps.",
-		0,
-		2048,
-		0,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																				   "number of steps",
+																				   "Number of steps.",
+																				   0,
+																				   2048,
+																				   0,
+																				   G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_STEP_SIZE, g_param_spec_float("step-size",
-		"size of a step",
-		"Size of a step.",
-		0.0,
-		FLT_MAX,
-		0.0,
-		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+																					  "size of a step",
+																					  "Size of a step.",
+																					  0.0,
+																					  FLT_MAX,
+																					  0.0,
+																					  G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 }
 
 static void gchart_init(Gchart *self)
