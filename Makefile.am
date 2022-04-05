@@ -32,6 +32,9 @@ AM_CFLAGS += -flto
 AM_CXXFLAGS += -flto
 endif
 
+export AM_CFLAGS
+export AM_CXXFLAGS
+
 ## Install the generated pkg-config file (.pc) into the expected location for
 ## architecture-dependent package configuration information.  Occasionally,
 ## pkg-config files are also used for architecture-independent data packages,
@@ -43,10 +46,10 @@ noinst_HEADERS = config.h
 
 EXTRA_DIST = VERSION @PROGRAM_NAME@.spec
 
-doc_DATA =                                      \
-	README                                      \
-	COPYING                                     \
-	AUTHORS                                     \
+doc_DATA =        \
+	README    \
+	COPYING   \
+	AUTHORS   \
 	ChangeLog
 
 ## Only try to update the ChangeLog file when git is availible to report all the changes.

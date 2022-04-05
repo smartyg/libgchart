@@ -6,16 +6,16 @@ GCHART_CFLAGS = @GLIB_CFLAGS@ @GTK_CFLAGS@
 GCHART_LIBS = @M_LIBS@ @GLIB_LIBS@ @GTK_LIBS@
 
 ## Shared library
-libgchart_@LIBRARY_API_VERSION@_la_CFLAGS =    \
-    $(WARN_CFLAGS)          \
-    $(DISABLE_DEPRECATED)   \
-    $(GCHART_CFLAGS)     \
-	-DG_LOG_DOMAIN=\"Gchart\"
+libgchart_@LIBRARY_API_VERSION@_la_CFLAGS = \
+    $(AM_CFLAGS)          \
+    $(WARN_CFLAGS)        \
+    $(DISABLE_DEPRECATED) \
+    $(GCHART_CFLAGS)      \
+    -DG_LOG_DOMAIN=\"Gchart\"
 
-libgchart_@LIBRARY_API_VERSION@_la_LDFLAGS = \
-	-version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
+libgchart_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
 
-libgchart_@LIBRARY_API_VERSION@_la_LIBADD =    \
+libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
     $(GCHART_LIBS) \
     -lm
 
@@ -25,9 +25,9 @@ sources_public_h = g_chart.h
 
 sources_c = g_chart.c
 
-libgchart_@LIBRARY_API_VERSION@_la_SOURCES =   \
-	$(sources_public_h)     \
-	$(sources_private_h)    \
+libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
+	$(sources_public_h)  \
+	$(sources_private_h) \
 	$(sources_c)
 
 libgchart_includedir = $(includedir)/gchart-0.1

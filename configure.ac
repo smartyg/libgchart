@@ -41,10 +41,18 @@ AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 
+# Do not automatically add -g -O2 to the compiler
+: ${CFLAGS=""}
+
 # Checks for programs.
 AC_LANG_C
 AC_PROG_CC
-AC_PROG_CXX
+# AC_PROG_CXX
+AC_PROG_CC_C99
+AC_C_INLINE
+AC_C_CHAR_UNSIGNED
+AC_C_STRINGIZE
+AC_C_TYPEOF
 
 dnl this allows us specify individual liking flags for each target
 AM_PROG_CC_C_O
