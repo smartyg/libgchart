@@ -2,6 +2,7 @@
 #ifndef __G_CHART_H__
 #define __G_CHART_H__
 
+#include <features.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>

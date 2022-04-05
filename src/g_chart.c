@@ -3,6 +3,7 @@
 
 #include "g_chart.h"
 
+#include <features.h>
 #include <math.h>
 #include <libintl.h>
 #include <glib.h>
