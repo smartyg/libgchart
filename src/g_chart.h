@@ -61,12 +61,12 @@ typedef void (*GchartAction)(float x_value, gconstpointer user_data);
 /**
  * Gchart: (skip)
  */
-typedef struct _Gchart        Gchart;
+typedef struct _Gchart Gchart;
 
 /**
  * GchartClass: (skip)
  */
-typedef struct _GchartClass   GchartClass;
+typedef struct _GchartClass GchartClass;
 
 /**
  * GchartDef: (skip)

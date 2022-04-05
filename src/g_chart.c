@@ -57,6 +57,7 @@ struct _GchartPrivate
 
 	/* callbacks for lineplotting */
 	GchartRangeValue x_min_value_cb, x_max_value_cb, y1_min_value_cb, y1_max_value_cb, y2_min_value_cb, y2_max_value_cb;
+
 	guint n_steps;
 	float step_size;
 	float zoom, x_center;
