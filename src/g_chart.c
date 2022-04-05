@@ -98,40 +98,40 @@ static void gchart_class_init(GchartClass *klass)
 	gobject_class->get_property = gchart_get_property;
 
 	g_object_class_install_property(gobject_class, PROP_TITLE, g_param_spec_string("title",
-		_("title"),
-		_("Title of this chart."),
+		"title",
+		"Title of this chart.",
 		NULL,
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_PLOT_LINES, g_param_spec_boolean("plot-lines",
-		_("plot lines between points"),
-		_("Plot lines between points."),
+		"plot lines between points",
+		"Plot lines between points.",
 		TRUE,
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_PLOT_DOTS, g_param_spec_boolean("plot-dots",
-		_("plot dots at points"),
-		_("Plot dots at points."),
+		"plot dots at points",
+		"Plot dots at points.",
 		FALSE,
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_ENABLE_Y2, g_param_spec_boolean("enable-y2",
-		_("enable y2 axis"),
-		_("Enable the left axis."),
+		"enable y2 axis",
+		"Enable the left axis.",
 		FALSE,
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_N_STEPS, g_param_spec_uint("n-steps",
-		_("number of steps"),
-		_("Number of steps."),
+		"number of steps",
+		"Number of steps.",
 		0,
 		2048,
 		0,
 		G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
 	g_object_class_install_property(gobject_class, PROP_STEP_SIZE, g_param_spec_float("step-size",
-		_("size of a step"),
-		_("Size of a step."),
+		"size of a step",
+		"Size of a step.",
 		0.0,
 		FLT_MAX,
 		0.0,
