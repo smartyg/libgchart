@@ -1096,19 +1096,18 @@ static void _gchart_print_text(cairo_t *cr, const char *text, const float x, con
 static gchar *_gchart_get_value_as_text(const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data)
 {
 	gchar *text;
-	GValue *v;
+	GValue v = G_VALUE_INIT;
 
-	v = NULL;
 
 	if(info_cb != NULL && unit != NULL) /* unit and info_cb are given */
 	{
-		v = info_cb(value, user_data);
-		text = g_strdup_printf("%s %s", g_value_get_string(v), unit);
+		if(info_cb(value, &v, user_data))
+			text = g_strdup_printf("%s %s", g_value_get_string(&v), unit);
 	}
 	else if(info_cb != NULL) /* only info_cb is given */
 	{
-		v = info_cb(value, user_data);
-		text = g_value_dup_string(v);
+		if(info_cb(value, &v, user_data))
+			text = g_value_dup_string(&v);
 	}
 	else if(unit != NULL) /* only unit is given */
 	{
@@ -1118,8 +1117,7 @@ static gchar *_gchart_get_value_as_text(const float value, const char *unit, con
 	{
 		text = g_strdup_printf("%.3G", value);
 	}
-	g_value_unset(v);
-	g_slice_free(GValue, v);
+	g_value_unset(&v);
 
 	return text;
 }

@@ -39,13 +39,14 @@ typedef float (*GchartRangeValue)(gconstpointer user_data);
 /**
  * GchartValueToInfoString:
  * @v: floating point number to be converted to a string.
+ * @string: (inout): #GValue type to fill the string into.
  * @user_data: pointer to arbitrairy user data.
  *
  * Callback prototype to format a value to a GValue G_TYPE_STRING type.
  *
  * Returns: a GValue G_TYPE_STRING type containing the text representation of v.
  */
-typedef GValue *(*GchartValueToInfoString)(float v, gconstpointer user_data);
+typedef gboolean (*GchartValueToInfoString)(float v, GValue *string, gconstpointer user_data);
 
 /**
  * GchartAction:
