@@ -195,6 +195,7 @@ static void gchart_finalize(GObject *object)
 	g_free(priv->x_unit);
 	g_free(priv->y1_unit);
 	g_free(priv->y2_unit);
+	g_free(priv->title);
 	priv->x_label = priv->y1_label = priv->y2_label = priv->x_unit = priv->y1_unit = priv->y2_unit = NULL;
 
 	/*
