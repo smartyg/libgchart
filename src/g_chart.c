@@ -417,7 +417,7 @@ void gchart_set_y1_functions(Gchart *self, const gchar *y1_label, const gchar *y
 	priv->y1_cb = y1_value_cb;
 }
 
-void g_chart_set_y2_functions(Gchart *self, const gchar *y2_label, const gchar *y2_unit, GchartValueToInfoString y2_info_cb, GchartGetValue y2_value_cb)
+void gchart_set_y2_functions(Gchart *self, const gchar *y2_label, const gchar *y2_unit, GchartValueToInfoString y2_info_cb, GchartGetValue y2_value_cb)
 {
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
