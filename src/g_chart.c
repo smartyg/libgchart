@@ -90,6 +90,8 @@ G_DEFINE_TYPE_WITH_PRIVATE(Gchart, gchart, GTK_TYPE_DRAWING_AREA);
 
 static void gchart_class_init(GchartClass *klass)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
 	gobject_class->dispose = gchart_dispose;
@@ -140,6 +142,8 @@ static void gchart_class_init(GchartClass *klass)
 
 static void gchart_init(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv = gchart_get_instance_private(self);
 
 	priv->x_scale = priv->y1_scale = priv->y2_scale = priv->x_info_value = 0;
@@ -180,11 +184,15 @@ static void gchart_init(Gchart *self)
 
 static void gchart_dispose(GObject *object)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	G_OBJECT_CLASS(gchart_parent_class)->dispose(object);
 }
 
 static void gchart_finalize(GObject *object)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	Gchart *self = GCHART_CAST(object);
 	GchartPrivate *priv = gchart_get_instance_private(self);
 
@@ -206,6 +214,8 @@ static void gchart_finalize(GObject *object)
 
 static void gchart_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	Gchart *self = GCHART_CAST(object);
 	GchartPrivate *priv = gchart_get_instance_private(self);
 
@@ -247,16 +257,22 @@ static void gchart_set_property(GObject *object, guint property_id, const GValue
 
 Gchart *gchart_new(void)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	return g_object_new(GCHART_TYPE, NULL);
 }
 
 void gchart_free(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	g_object_unref(self);
 }
 
 static void gchart_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	Gchart *self = GCHART_CAST(object);
 	GchartPrivate *priv = gchart_get_instance_private(self);
 
@@ -289,6 +305,8 @@ static void gchart_get_property(GObject *object, guint property_id, GValue *valu
 
 gboolean gchart_set_from_definition(Gchart *self, const GchartDef *cd, gconstpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 
 	g_return_val_if_fail(GCHART_IS_CHART(self), FALSE);
@@ -344,6 +362,8 @@ gboolean gchart_set_from_definition(Gchart *self, const GchartDef *cd, gconstpoi
 
 void gchart_enable_y2_axis(Gchart *self, gboolean enable)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -352,6 +372,8 @@ void gchart_enable_y2_axis(Gchart *self, gboolean enable)
 
 void gchart_plot_lines(Gchart *self, gboolean lines)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -360,6 +382,8 @@ void gchart_plot_lines(Gchart *self, gboolean lines)
 
 void gchart_plot_dots(Gchart *self, gboolean dots)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -368,6 +392,8 @@ void gchart_plot_dots(Gchart *self, gboolean dots)
 
 gconstpointer gchart_get_user_data(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
 	priv = gchart_get_instance_private(self);
@@ -376,6 +402,8 @@ gconstpointer gchart_get_user_data(Gchart *self)
 
 void gchart_set_user_data(Gchart *self, gconstpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -384,6 +412,8 @@ void gchart_set_user_data(Gchart *self, gconstpointer user_data)
 
 void gchart_set_title(Gchart *self, const gchar *title)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -393,6 +423,8 @@ void gchart_set_title(Gchart *self, const gchar *title)
 
 void gchart_set_x_functions(Gchart *self, const gchar *x_label, const gchar *x_unit, GchartValueToInfoString x_info_cb, GchartGetValue x_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -406,6 +438,8 @@ void gchart_set_x_functions(Gchart *self, const gchar *x_label, const gchar *x_u
 
 void gchart_set_y1_functions(Gchart *self, const gchar *y1_label, const gchar *y1_unit, GchartValueToInfoString y1_info_cb, GchartGetValue y1_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -419,6 +453,8 @@ void gchart_set_y1_functions(Gchart *self, const gchar *y1_label, const gchar *y
 
 void gchart_set_y2_functions(Gchart *self, const gchar *y2_label, const gchar *y2_unit, GchartValueToInfoString y2_info_cb, GchartGetValue y2_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -432,6 +468,8 @@ void gchart_set_y2_functions(Gchart *self, const gchar *y2_label, const gchar *y
 
 void gchart_set_x_limits(Gchart *self, const float x_min, const float x_max)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -441,6 +479,8 @@ void gchart_set_x_limits(Gchart *self, const float x_min, const float x_max)
 
 void gchart_set_y1_limits(Gchart *self, const float y1_min, const float y1_max)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -450,6 +490,8 @@ void gchart_set_y1_limits(Gchart *self, const float y1_min, const float y1_max)
 
 void gchart_set_y2_limits(Gchart *self, const float y2_min, const float y2_max)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -459,6 +501,8 @@ void gchart_set_y2_limits(Gchart *self, const float y2_min, const float y2_max)
 
 void gchart_set_x_limits_functions(Gchart *self, GchartRangeValue x_min_value_cb, GchartRangeValue x_max_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -468,6 +512,8 @@ void gchart_set_x_limits_functions(Gchart *self, GchartRangeValue x_min_value_cb
 
 void gchart_set_y1_limits_functions(Gchart *self, GchartRangeValue y1_min_value_cb, GchartRangeValue y1_max_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -477,6 +523,8 @@ void gchart_set_y1_limits_functions(Gchart *self, GchartRangeValue y1_min_value_
 
 void gchart_set_y2_limits_functions(Gchart *self, GchartRangeValue y2_min_value_cb, GchartRangeValue y2_max_value_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -486,6 +534,8 @@ void gchart_set_y2_limits_functions(Gchart *self, GchartRangeValue y2_min_value_
 
 void gchart_set_n_steps(Gchart *self, const unsigned int n_steps)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -494,6 +544,8 @@ void gchart_set_n_steps(Gchart *self, const unsigned int n_steps)
 
 unsigned int gchart_get_n_steps(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), 0);
 	priv = gchart_get_instance_private(self);
@@ -502,6 +554,8 @@ unsigned int gchart_get_n_steps(Gchart *self)
 
 void gchart_set_zoom(Gchart *self, const float zoom, const float center)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	g_return_if_fail(zoom >= 1.0f);
@@ -514,6 +568,8 @@ void gchart_set_zoom(Gchart *self, const float zoom, const float center)
 
 float gchart_get_zoom(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), NAN);
 	priv = gchart_get_instance_private(self);
@@ -522,6 +578,8 @@ float gchart_get_zoom(Gchart *self)
 
 float gchart_get_center(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), NAN);
 	priv = gchart_get_instance_private(self);
@@ -530,6 +588,8 @@ float gchart_get_center(Gchart *self)
 
 void gchart_set_on_mouse_over_function(Gchart *self, GchartAction on_mouse_over_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -538,6 +598,8 @@ void gchart_set_on_mouse_over_function(Gchart *self, GchartAction on_mouse_over_
 
 GchartAction gchart_get_on_mouse_over_function(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
 	priv = gchart_get_instance_private(self);
@@ -546,6 +608,8 @@ GchartAction gchart_get_on_mouse_over_function(Gchart *self)
 
 void gchart_set_on_mouse_click_function(Gchart *self, GchartAction on_mouse_click_cb)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_if_fail(GCHART_IS_CHART(self));
 	priv = gchart_get_instance_private(self);
@@ -554,6 +618,8 @@ void gchart_set_on_mouse_click_function(Gchart *self, GchartAction on_mouse_clic
 
 GchartAction gchart_get_on_mouse_click_function(Gchart *self)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	GchartPrivate *priv;
 	g_return_val_if_fail(GCHART_IS_CHART(self), NULL);
 	priv = gchart_get_instance_private(self);
@@ -562,6 +628,8 @@ GchartAction gchart_get_on_mouse_click_function(Gchart *self)
 
 static float _gchart_get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *event)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	guint width, height;
 	GchartPrivate *priv;
 
@@ -576,6 +644,8 @@ static float _gchart_get_x_value_mouse(GtkWidget *widget, const GdkEventMotion *
 
 static gboolean _gchart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	UNUSED(user_data);
 
 	GdkWindow *window;
@@ -616,6 +686,8 @@ static gboolean _gchart_cursor_move_cb(GtkWidget *widget, GdkEventMotion *event,
 
 static gboolean _gchart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event, gpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	UNUSED(user_data);
 
 	float x_value;
@@ -632,6 +704,8 @@ static gboolean _gchart_cursor_click_cb(GtkWidget *widget, GdkEventMotion *event
 
 inline static void _gchart_update_offsets(cairo_t *cr, GchartPrivate *priv)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	/* Get expected text width for the top and left. This is based on the labels on the y-axis */
 	cairo_text_extents_t extents, extents2;
 	gchar *text;
@@ -689,6 +763,8 @@ inline static void _gchart_update_offsets(cairo_t *cr, GchartPrivate *priv)
 
 static gboolean _gchart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	UNUSED(user_data);
 
 	GchartPrivate *priv = gchart_get_instance_private(GCHART_CAST(widget));
@@ -705,6 +781,8 @@ static gboolean _gchart_draw_cb(GtkWidget *widget, cairo_t *cr, gpointer user_da
 
 static void _gchart_draw_info(GtkWidget *widget, cairo_t *cr, const GchartPrivate *priv)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	guint width, height;
 	float h, offset, x_value, n;
 	cairo_text_extents_t extents;
@@ -759,6 +837,8 @@ static void _gchart_draw_info(GtkWidget *widget, cairo_t *cr, const GchartPrivat
 
 static void _gchart_draw(GtkWidget *widget, cairo_t *cr, GchartPrivate *priv)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	float step_size, x_value, x_min_real, x_max_real;
 	guint width, height;
 
@@ -930,6 +1010,8 @@ static void _gchart_draw(GtkWidget *widget, cairo_t *cr, GchartPrivate *priv)
 
 inline static void _gchart_draw_raster(cairo_t *cr, const GchartPrivate *priv, const guint width, const guint height)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	cairo_text_extents_t extents;
 	int x_lines, y_lines, j;
 
@@ -999,6 +1081,8 @@ inline static void _gchart_draw_raster(cairo_t *cr, const GchartPrivate *priv, c
 
 inline static void _gchart_draw_sub_line(cairo_t *cr, const double x1, const double y1, const double x2, const double y2)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	const double dashes[] = {6.0};
 	cairo_set_source_rgba(cr, 0, 0, 0, 0.8);
 	_gchart_set_line_atributes(cr, 0.25, CAIRO_LINE_JOIN_MITER, CAIRO_LINE_CAP_BUTT);
@@ -1009,6 +1093,8 @@ inline static void _gchart_draw_sub_line(cairo_t *cr, const double x1, const dou
 
 inline static void _gchart_draw_sub_line_vertical(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double y2)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
 	_gchart_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, MIDDLE_TOP, 5);
 	_gchart_draw_sub_line(cr, x1, y1, x1, y2);
@@ -1018,6 +1104,8 @@ inline static void _gchart_draw_sub_line_vertical(cairo_t *cr, const double valu
 
 inline static void _gchart_draw_sub_line_horizontal(cairo_t *cr, const double value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const double x1, const double y1, const double x2)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	cairo_set_source_rgba(cr, 0, 0, 0, 1);
 	_gchart_print_value_with_unit(cr, value, unit, info_cb, user_data, x1, y1, RIGHT_MIDDLE, 5);
 	_gchart_draw_sub_line(cr, x1, y1, x2, y1);
@@ -1027,6 +1115,8 @@ inline static void _gchart_draw_sub_line_horizontal(cairo_t *cr, const double va
 
 inline static void _gchart_set_line_atributes(cairo_t *cr, const double width, const cairo_line_join_t line_join, const cairo_line_cap_t line_cap)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	cairo_set_line_width(cr, width);
 	cairo_set_line_join(cr, line_join);
 	cairo_set_line_cap(cr, line_cap);
@@ -1046,6 +1136,8 @@ inline static void _gchart_set_line_atributes(cairo_t *cr, const double width, c
  */
 static void _gchart_print_text(cairo_t *cr, const char *text, const float x, const float y, const text_mode_t m, const float padding)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	float x_new, y_new;
 	cairo_text_extents_t extents;
 
@@ -1096,6 +1188,8 @@ static void _gchart_print_text(cairo_t *cr, const char *text, const float x, con
 
 static gchar *_gchart_get_value_as_text(const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	gchar *text;
 	GValue v = G_VALUE_INIT;
 
@@ -1125,6 +1219,8 @@ static gchar *_gchart_get_value_as_text(const float value, const char *unit, con
 
 static void _gchart_print_value_with_unit(cairo_t *cr, const float value, const char *unit, const GchartValueToInfoString info_cb, gconstpointer user_data, const float x, const float y, const text_mode_t m, const float padding)
 {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+
 	gchar *text;
 
 	if(isnan(value)) return;
