@@ -5,7 +5,6 @@
 
 #include <features.h>
 #include <math.h>
-#include <libintl.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -649,17 +648,17 @@ inline static void _gchart_update_offsets(cairo_t *cr, GchartPrivate *priv)
 	info_box_width = extents.width;
 
 	/* Get expected text width for the info box */
-	cairo_text_extents(cr, _(priv->x_label), &extents);
+	cairo_text_extents(cr, priv->x_label, &extents);
 	extents.width += PADDING;
 	info_box_width = MAX(extents.width, info_box_width);
 
-	cairo_text_extents(cr, _(priv->y1_label), &extents);
+	cairo_text_extents(cr, priv->y1_label, &extents);
 	extents.width += PADDING;
 	info_box_width = MAX(extents.width, info_box_width);
 
 	if(priv->enable_y2)
 	{
-		cairo_text_extents(cr, _(priv->y2_label), &extents);
+		cairo_text_extents(cr, priv->y2_label, &extents);
 		extents.width += PADDING;
 		info_box_width = MAX(extents.width, info_box_width);
 	}

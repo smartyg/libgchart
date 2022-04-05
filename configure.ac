@@ -105,7 +105,6 @@ GOBJECT_INTROSPECTION_CHECK([$GOBJECT_INTROSPECTION_REQS])
 GTK_DOC_CHECK([1.12])
 
 AC_DEFINE([_GNU_SOURCE], [1], [use gnu extensions])
-AC_DEFINE([_(s)], [dgettext(PROGRAM_NAME, s)], [use gnu extensions])
 
 # Compute the major version of the library which is the last part of the library SONAME.
 AC_SUBST([LIBRARY_OLD_INTERFACE], [$((LIBRARY_CURRENT_VERSION-LIBRARY_AGE_VERSION))])
