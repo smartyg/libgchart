@@ -19,11 +19,17 @@ libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
     $(GCHART_LIBS) \
     -lm
 
-sources_private_h =
+sources_private_h =       \
+	gchart-internal.h \
+	gchart-draw.h     \
+	gchart-text.h
 
 sources_public_h = gchart.h
 
-sources_c = gchart.c
+sources_c =               \
+	gchart.c          \
+	gchart-draw.c     \
+	gchart-text.c
 
 libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
