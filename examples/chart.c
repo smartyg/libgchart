@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
-#include "g_chart.h"
+#include "gchart.h"
 
 float _x_value_cb(float x, gconstpointer user_data);
 float _y1_value_cb(float x, gconstpointer user_data);

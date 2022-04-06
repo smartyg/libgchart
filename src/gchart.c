@@ -18,7 +18,7 @@
 
 #include "config.h"
 
-#include "g_chart.h"
+#include "gchart.h"
 
 #include <features.h>
 #include <math.h>

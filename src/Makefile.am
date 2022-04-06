@@ -21,9 +21,9 @@ libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
 
 sources_private_h =
 
-sources_public_h = g_chart.h
+sources_public_h = gchart.h
 
-sources_c = g_chart.c
+sources_c = gchart.c
 
 libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
@@ -50,7 +50,7 @@ Gchart_@LIBRARY_API_VERSION@_gir_INCLUDES = GObject-2.0 Gtk-3.0
 Gchart_@LIBRARY_API_VERSION@_gir_CFLAGS = $(GCHART_CFLAGS) -I$(srcdir) -I$(builddir)
 Gchart_@LIBRARY_API_VERSION@_gir_LIBS = libgchart-@LIBRARY_API_VERSION@.la
 Gchart_@LIBRARY_API_VERSION@_gir_FILES = $(introspection_sources)
-Gchart_@LIBRARY_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "g_chart.h"
+Gchart_@LIBRARY_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "gchart.h"
 INTROSPECTION_GIRS += Gchart-@LIBRARY_API_VERSION@.gir
 
 girdir = $(datadir)/gir-1.0
