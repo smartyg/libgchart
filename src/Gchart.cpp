@@ -172,7 +172,7 @@ void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	float y1_value, y2_value;
 	y1_value = NAN;
 	y2_value = NAN;
-	if (isfinite (this->x_mouse_pointer)) {
+	if (std::isfinite (this->x_mouse_pointer)) {
 		y1_value = (*(this->y1->begin ())).getValue (this->x_mouse_pointer);
 		if (this->y2)
 			y2_value = (*(this->y2->begin ())).getValue (this->x_mouse_pointer);
@@ -332,7 +332,7 @@ void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 
 			if (point->getX () < this->x_min) break;
 			if (point->getX () > this->x_max) break;
-			if (!isfinite (point->getX ()) || !isfinite (point->getY ())) continue;
+			if (!std::isfinite (point->getX ()) || !std::isfinite (point->getY ())) continue;
 
 			this->drawPoint (layer, y, point, height);
 		}
@@ -364,14 +364,14 @@ void Gchart::drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 const double Gchart::getXCoord (const float &x) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
-	if (!isfinite (x)) return this->offset_left;
+	if (!std::isfinite (x)) return this->offset_left;
 	return this->offset_left + ((x - this->x_min) * this->x_scale);
 }
 
 const double Gchart::getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
-	if (!isfinite (y)) return this->offset_bottom;
+	if (!std::isfinite (y)) return this->offset_bottom;
 	return this->offset_bottom + ((y - y_provider->y_min) * y_provider->y_scale);
 }
 
@@ -384,10 +384,10 @@ void Gchart::calculateMinMaxValues (const int &width, const int &height) {
 	x_max_data = this->y1->getXMax ();
 
 	/* If zoom is bigger than 1.0 then adjust the minimum and maximum x value to it. */
-	if (isfinite (this->zoom) && this->zoom > 1.0f) {
+	if (std::isfinite (this->zoom) && this->zoom > 1.0f) {
 		x_span_zoom = (x_max_data - x_min_data) / ( 2 * this->zoom);
 		/* If x_center is not set, set it to the middle of the real window. */
-		if (!isfinite (this->x_center)) {
+		if (!std::isfinite (this->x_center)) {
 			this->x_center = (x_max_data + x_min_data) /  2;
 		} else {
 			/* If x_center was set, check if it is within the minimum and maximum. */
