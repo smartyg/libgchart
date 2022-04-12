@@ -27,7 +27,7 @@
 #include "GchartPoint.hpp"
 #include "helper.hpp"
 
-typedef const float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::const_iterator &it);
+typedef float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::const_iterator &it);
 
 class GchartChart {
 private:
@@ -54,26 +54,26 @@ public:
 	~GchartChart (void);
 
 	const float& operator[] (std::size_t idx) const;
-	const float getValue (const float &x) const;
+	float getValue (const float &x) const;
 
 private:
-	const float getValue (float &x, GchartMap::const_iterator &it) const;
+	float getValue (float &x, GchartMap::const_iterator &it) const;
 
 public:
 	const std::shared_ptr<GchartPoint> getPoint (const float &x) const;
-	const int getIdentifier (void) const;
+	const int& getIdentifier (void) const;
 	const std::shared_ptr<GchartPoint> getNextPoint (const std::shared_ptr<GchartPoint> &prev, const float &x_hint) const;
-	const size_t size (void) const noexcept;
+	size_t size (void) const noexcept;
 	const GchartMap::const_iterator end (void) const noexcept;
 	const GchartMap::const_iterator begin (void) const noexcept;
 	const GchartMap::const_iterator last (void) const;
 	const GchartColor& getColor (void) const;
 
-	static const float linear (const GchartMap &map, float &x, GchartMap::const_iterator &it);
-	static const float curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
-	static const float curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
-	static const float curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
-	static const float curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+	static float linear (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+	static float curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+	static float curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+	static float curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+	static float curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
 };
 
 #endif /* __GCHART_CHART_HPP__ */

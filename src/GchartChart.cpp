@@ -77,7 +77,7 @@ const float& GchartChart::operator[] (std::size_t idx) const {
 	return (*it).second;
 }
 
-const float GchartChart::getValue (const float &x) const {
+float GchartChart::getValue (const float &x) const {
 	auto it = this->_map.end ();
 	float x_hint = x;
 	float y = this->_get_value (this->_map, x_hint, it);
@@ -85,7 +85,7 @@ const float GchartChart::getValue (const float &x) const {
 	return NAN;
 }
 
-const float GchartChart::getValue (float &x, GchartMap::const_iterator &it) const {
+float GchartChart::getValue (float &x, GchartMap::const_iterator &it) const {
 	return this->_get_value (this->_map, x, it);
 }
 
@@ -94,7 +94,7 @@ const std::shared_ptr<GchartPoint> GchartChart::getPoint (const float &x) const 
 	return std::make_shared<GchartPoint>(x, y, this->_map.end ());
 }
 
-const int GchartChart::getIdentifier (void) const {
+const int& GchartChart::getIdentifier (void) const {
 	return this->_identifier;
 }
 
@@ -105,7 +105,7 @@ const std::shared_ptr<GchartPoint> GchartChart::getNextPoint (const std::shared_
 	return std::make_shared<GchartPoint>(x, y, 0, it);
 }
 
-const size_t GchartChart::size (void) const noexcept {
+size_t GchartChart::size (void) const noexcept {
 	return this->_map.size ();
 }
 
@@ -126,7 +126,7 @@ const GchartColor& GchartChart::getColor (void) const {
 	return this->_color;
 }
 
-const float GchartChart::linear (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+float GchartChart::linear (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
 	float x1 = NAN;
 	float y1 = NAN;
 
@@ -155,18 +155,18 @@ const float GchartChart::linear (const GchartMap &map, float &x, GchartMap::cons
 	}
 }
 
-const float GchartChart::curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+float GchartChart::curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
 	return 0.0f;
 }
 
-const float GchartChart::curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+float GchartChart::curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
 	return 0.0f;
 }
 
-const float GchartChart::curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+float GchartChart::curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
 	return 0.0f;
 }
 
-const float GchartChart::curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+float GchartChart::curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
 	return 0.0f;
 }
