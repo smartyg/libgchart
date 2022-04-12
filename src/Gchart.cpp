@@ -137,7 +137,7 @@ void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	if (!this->init) return;
 	if (this->update_buffer || this->buffered_width != width || this->buffered_height != height) {
 		//delete this->buffer;
-		Glib::RefPtr<Cairo::Surface> ref_surface = cr->get_target ();
+		Cairo::RefPtr<Cairo::Surface> ref_surface = cr->get_target ();
 		width = this->get_allocated_width ();
 		height = this->get_allocated_height ();
 		this->buffer = Cairo::Surface::create (ref_surface, ref_surface->get_content (), width, height);
