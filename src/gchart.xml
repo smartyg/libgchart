@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<glade-catalog name="gchart" library="gchartsglade" depends="gtk+">
+	<init-function>gcharts_glade_init</init-function>
+	<glade-widget-classes>
+		<glade-widget-class name="gtkmm__CustomObject_gchart" generic-name="gchart" icon-name="widget-gtk-entry" title="Chart Widget">
+		</glade-widget-class>
+	</glade-widget-classes>
+	<glade-widget-group name="customwidgets" title="Custom Widgets" >
+		<glade-widget-class-ref name="gtkmm__CustomObject_gchart" />
+	</glade-widget-group>
+</glade-catalog>

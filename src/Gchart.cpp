@@ -32,6 +32,20 @@
 #define BORDER_OFFSET (PADDING)
 #define DOT_RADIUS 2.0
 
+#ifdef GTK4
+#define LINECAP_ROUND ROUND
+#define LINECAP_BUTT BUT
+#define LINEJOIN_ROUND ROUND
+#define LINEJOIN_MITER MITER
+#define ARGB32 ARGB32
+#else
+#define LINECAP_ROUND LINE_CAP_ROUND
+#define LINECAP_BUTT LINE_CAP_BUTT
+#define LINEJOIN_ROUND LINE_JOIN_ROUND
+#define LINEJOIN_MITER LINE_JOIN_MITER
+#define ARGB32 FORMAT_ARGB32
+#endif
+
 Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 	this->init = false;
@@ -40,6 +54,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	this->plot_lines = true;
 	this->plot_dots = true;
 
+#ifdef GTK4
 	m_scroll = Gtk::EventControllerScroll::create ();
 	m_move = Gtk::EventControllerMotion::create ();
 	m_button = Gtk::EventControllerKey::create ();
@@ -55,6 +70,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	m_scroll->signal_scroll ().connect (sigc::mem_fun (*this, &Gchart::onZoom), false);
 	m_move->signal_motion ().connect (sigc::mem_fun (*this, &Gchart::onMouseMove), false);
 	m_button->signal_key_pressed ().connect (sigc::mem_fun (*this, &Gchart::onKeyPressed), false);
+#endif
 }
 
 Gchart::~Gchart (void) {
@@ -173,7 +189,7 @@ void Gchart::calulateOffsets (const int &width, const int &height) {
 	float info_box_width;
 
 	// Create a temporary surface to calculate the text sizes.
-	auto surface = Cairo::ImageSurface::create (Cairo::Surface::Format::ARGB32, width, height);
+	auto surface = Cairo::ImageSurface::create (CAIRO_ENUM_NS_SURFACE::Format::ARGB32, width, height);
 	auto layer = Cairo::Context::create (surface);
 
 	text = this->y1->getLabel ()->getValueUnitText (0.0);
@@ -289,7 +305,7 @@ void Gchart::drawBuffer (Cairo::RefPtr<Cairo::Surface> surface) {
 
 	std::vector<double> dashes;
 	layer->set_dash(dashes, 0);
-	this->setLineAtributes (layer, 1.0, Cairo::Context::LineJoin::ROUND, Cairo::Context::LineCap::ROUND);
+	this->setLineAtributes (layer, 1.0, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_ROUND, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_ROUND);
 	//layer->set_source_rgba (1, 0, 0, 1);
 	this->drawChart (layer, this->y1, height, this->x_min, this->x_max, (static_cast<float>(x_lines) / 10));
 	if (this->y2) {
@@ -424,7 +440,7 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	if(this->y2)
 		layer->line_to(width - this->offset_right, this->offset_top);
 
-	Gchart::setLineAtributes (layer, 1, Cairo::Context::LineJoin::MITER, Cairo::Context::LineCap::BUTT);
+	Gchart::setLineAtributes (layer, 1, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
 	layer->stroke ();
 
 	layer->get_text_extents ("0", extents);
@@ -471,7 +487,7 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	layer->fill ();
 }
 
-void Gchart::setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const Cairo::Context::LineJoin &line_join, const Cairo::Context::LineCap &line_cap) {
+void Gchart::setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	layer->set_line_width (width);
@@ -484,7 +500,7 @@ void Gchart::drawSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &x1,
 
 	std::vector<double> dashes = {6.0};
 	layer->set_source_rgba (0, 0, 0, 0.8);
-	Gchart::setLineAtributes (layer, 0.25, Cairo::Context::LineJoin::MITER, Cairo::Context::LineCap::BUTT);
+	Gchart::setLineAtributes (layer, 0.25, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
 	layer->set_dash(dashes, 0);
 	layer->move_to(x1, y1);
 	layer->line_to(x2, y2);
@@ -563,4 +579,31 @@ void Gchart::printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &
 
 	layer->move_to (x_new + padding, y_new - padding);
 	layer->show_text (text);
+}
+
+// Glade code
+GType Gchart::gtype = 0;
+
+Gchart::Gchart (GtkDrawingArea *gobj) : Gtk::DrawingArea (gobj) {
+}
+
+Glib::ObjectBase *Gchart::wrap_new (GObject *o) {
+	if (gtk_widget_is_toplevel (GTK_WIDGET (o))) {
+		return new Gchart (GTK_DRAWING_AREA (o));
+	} else {
+		return Gtk::manage(new Gchart (GTK_DRAWING_AREA (o)));
+	}
+}
+
+void Gchart::register_type (void) {
+	if (gtype)
+		return;
+
+	Gchart dummy;
+
+	GtkWidget *widget = GTK_WIDGET (dummy.gobj ());
+
+	gtype = G_OBJECT_TYPE (widget);
+
+	Glib::wrap_register (gtype, Gchart::wrap_new);
 }

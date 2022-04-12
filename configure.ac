@@ -105,10 +105,10 @@ AC_ARG_ENABLE([docs],
 	esac],
 	[docs=true])
 
-PKG_CHECK_MODULES([GTK], [gtk4 >= 4.6.0])
-PKG_CHECK_MODULES([GTKMM], [gtkmm-4.0 >= 4.6.0])
-PKG_CHECK_MODULES([GLIBMM], [glibmm-2.68])
-PKG_CHECK_MODULES([CAIROMM], [cairomm-1.16])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4 > 2.66.0])
+PKG_CHECK_MODULES([CAIROMM], [cairomm-1.0])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])

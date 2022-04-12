@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-lib_LTLIBRARIES = libgchart-@LIBRARY_API_VERSION@.la
+lib_LTLIBRARIES = libgchart-@LIBRARY_API_VERSION@.la libgchartsglade.la
 
 GCHART_CPPFLAGS = @GTK_CFLAGS@ @GLIBMM_CFLAGS@ @CAIROMM_CFLAGS@ @GTKMM_CFLAGS@
 
@@ -28,7 +28,8 @@ sources_public_h =         \
 	GchartPoint.hpp    \
 	GchartLabel.hpp    \
 	GchartColor.hpp    \
-	helper.hpp
+	helper.hpp         \
+	gchart_glade.h
 
 sources_c =                \
 	Gchart.cpp         \
@@ -42,6 +43,19 @@ libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
 
 libgchart_includedir = $(includedir)/gchart-0.1
 nobase_libgchart_include_HEADERS = $(sources_public_h)
+
+libgchartsglade_la_CPPFLAGS = \
+    $(AM_CPPFLAGS)          \
+    $(WARN_CPPFLAGS)        \
+    $(DISABLE_DEPRECATED) \
+    $(GCHART_CPPFLAGS)      \
+    -DG_LOG_DOMAIN=\"Gchart\"
+
+libgchartsglade_la_SOURCES = gchart_glade.cpp
+
+libgchartsglade_la_LIBADD = \
+    $(GCHART_LIBS) \
+    -lm
 
 ## Misc
 CLEANFILES =
