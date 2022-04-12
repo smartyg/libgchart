@@ -1,27 +1,21 @@
 ## Process this file with automake to produce Makefile.in
 
-CHART_CFLAGS =      \
-    $(GLIB_CFLAGS)  \
-    $(GTK_CFLAGS)   \
-    $(CAIRO_CFLAGS)
+CHART_CPPFLAGS = @GTK_CFLAGS@ @GLIBMM_CFLAGS@ @CAIROMM_CFLAGS@ @GTKMM_CFLAGS@
 
-CHART_LIBS =      \
-    $(GLIB_LIBS)  \
-    $(GTK_LIBS)   \
-    $(CAIRO_LIBS)
+CHART_LIBS = @M_LIBS@ @GTK_LIBS@ @GLIBMM_LIBS@ @CAIROMM_LIBS@ @GTKMM_LIBS@
 
 ## Demo Application
 noinst_PROGRAMS = chart
 
-chart_SOURCES = chart.c
+chart_SOURCES = chart.cpp
 
-chart_CFLAGS =            \
+chart_CPPFLAGS =          \
     -I$(top_srcdir)/src   \
-    $(AM_CFLAGS)          \
-    $(WARN_CFLAGS)        \
+    $(AM_CPPFLAGS)        \
+    $(WARN_CPPFLAGS)      \
     $(DISABLE_DEPRECATED) \
-    $(CHART_CFLAGS)       \
-    $(GTHREAD_CFLAGS)
+    $(CHART_CPPFLAGS)     \
+    $(GTHREAD_CPPFLAGS)
 
 chart_LDADD =       \
     $(CHART_LIBS)   \

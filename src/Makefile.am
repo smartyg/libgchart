@@ -1,16 +1,16 @@
 ## Process this file with automake to produce Makefile.in
 lib_LTLIBRARIES = libgchart-@LIBRARY_API_VERSION@.la
 
-GCHART_CFLAGS = @GLIB_CFLAGS@ @GTK_CFLAGS@
+GCHART_CPPFLAGS = @GTK_CFLAGS@ @GLIBMM_CFLAGS@ @CAIROMM_CFLAGS@ @GTKMM_CFLAGS@
 
-GCHART_LIBS = @M_LIBS@ @GLIB_LIBS@ @GTK_LIBS@
+GCHART_LIBS = @M_LIBS@ @GTK_LIBS@ @GLIBMM_LIBS@ @CAIROMM_LIBS@ @GTKMM_LIBS@
 
 ## Shared library
-libgchart_@LIBRARY_API_VERSION@_la_CFLAGS = \
-    $(AM_CFLAGS)          \
-    $(WARN_CFLAGS)        \
+libgchart_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
+    $(AM_CPPFLAGS)          \
+    $(WARN_CPPFLAGS)        \
     $(DISABLE_DEPRECATED) \
-    $(GCHART_CFLAGS)      \
+    $(GCHART_CPPFLAGS)      \
     -DG_LOG_DOMAIN=\"Gchart\"
 
 libgchart_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
@@ -20,16 +20,14 @@ libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
     -lm
 
 sources_private_h =       \
-	gchart-internal.h \
-	gchart-draw.h     \
-	gchart-text.h
+	helper.hpp
 
-sources_public_h = gchart.h
+sources_public_h = Gchart.hpp \
+	GchartProvider.hpp
 
 sources_c =               \
-	gchart.c          \
-	gchart-draw.c     \
-	gchart-text.c
+	Gchart.cpp \
+	helper.cpp
 
 libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \

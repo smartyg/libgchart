@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
 AC_INIT(libgchart, 0.1.0, goedhart.martijn@gmail.com)
-AC_CONFIG_SRCDIR([src/gchart.c])
+AC_CONFIG_SRCDIR([src/Gchart.cpp])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CANONICAL_BUILD
@@ -43,18 +43,20 @@ AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 # Do not automatically add -g -O2 to the compiler
 : ${CFLAGS=""}
 
-# Checks for programs.
-AC_LANG_C
-AC_PROG_CC
-# AC_PROG_CXX
-AC_PROG_CC_C99
-AC_C_INLINE
-AC_C_CHAR_UNSIGNED
-AC_C_STRINGIZE
-AC_C_TYPEOF
+# Check for language support
+AC_LANG([C])
+AC_LANG([C++])
 
-dnl this allows us specify individual liking flags for each target
-AM_PROG_CC_C_O
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_PROG_CXX_C_O
+
+# Check for c++ language versions
+AX_CXX_COMPILE_STDCXX(11, ext, mandatory)
+AX_CXX_COMPILE_STDCXX(14, ext, optional)
+AX_CXX_COMPILE_STDCXX(17, ext, optional)
+# AX_CXX_COMPILE_STDCXX(20, ext, optional)
 
 dnl Initialize Libtool
 LT_INIT
@@ -83,6 +85,16 @@ AC_ARG_ENABLE([debug],
 	esac],
 	[debug=false])
 
+# release flag (remove all debug code from compilation)
+AC_ARG_ENABLE([release],
+	[AS_HELP_STRING([--enable-release], [Compile for release (remove debug code) @<:@default=disabled@:>@])],
+	[case "${enableval}" in
+		yes) release=true; debug=no ;;
+		no)  release=false ;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-release]) ;;
+	esac],
+	[release=false])
+
 #compile documentation (doxygen)
 AC_ARG_ENABLE([docs],
 	[AS_HELP_STRING([--disable-docs], [generate documentation @<:@default=enabled@:>@])],
@@ -93,8 +105,10 @@ AC_ARG_ENABLE([docs],
 	esac],
 	[docs=true])
 
-PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.32 gobject-2.0 >= 2.38])
-PKG_CHECK_MODULES([GTK], [gtk+-3.0])
+PKG_CHECK_MODULES([GTK], [gtk4 >= 4.6.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-4.0 >= 4.6.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.68])
+PKG_CHECK_MODULES([CAIROMM], [cairomm-1.16])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])
@@ -112,8 +126,11 @@ AC_SUBST([LIBRARY_OLD_INTERFACE], [$((LIBRARY_CURRENT_VERSION-LIBRARY_AGE_VERSIO
 # Test for programs
 AC_CHECK_PROGS([GIT], [git])
 
-if test "x$debug" == xtrue; then
-	AC_DEFINE([DEBUG], [], [debug flag])
+if test "x$release" == xtrue; then
+	AC_DEFINE([_RELEASE], [], [release flag])
+	AM_SILENT_RULES([yes])
+elif test "x$debug" == xtrue; then
+	AC_DEFINE([_DEBUG], [], [debug flag])
 else
 	AM_SILENT_RULES([yes])
 fi
@@ -159,6 +176,7 @@ then
 fi
 
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
+AM_CONDITIONAL([RELEASE], [test x$release = xtrue])
 AM_CONDITIONAL([DOCS], [test x$docs = xtrue])
 AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
