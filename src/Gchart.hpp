@@ -53,7 +53,7 @@ private:
 	std::shared_ptr<GchartLabel> label;
 	int buffered_width, buffered_height;
 
-	Glib::RefPtr<Cairo::Surface> buffer;
+	Cairo::RefPtr<Cairo::Surface> buffer;
 
 #ifdef GTK4
 	Glib::RefPtr<Gtk::EventControllerScroll> m_scroll;
