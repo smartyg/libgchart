@@ -16,23 +16,18 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __G_CHART_HPP__
-#define __G_CHART_HPP__
+#ifndef __GCHART_HPP__
+#define __GCHART_HPP__
 
-#include <features.h>
+#include <memory>
+#include <string>
 #include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
-#define PADDING (5)
-#define BORDER_OFFSET (PADDING)
-#define DOT_RADIUS 2.0
-
-class GchartLabel;
-
-typedef const std::string (*GchartValuePrint) (const GchartLabel *self, const float &value);
-typedef std::map<const float, const float> GchartMap;
-typedef const float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::const_iterator &it);
-
+#include "GchartColor.hpp"
+#include "GchartLabel.hpp"
+#include "GchartPoint.hpp"
+#include "GchartChart.hpp"
 #include "GchartProvider.hpp"
 
 class Gchart : public Gtk::DrawingArea {
@@ -109,4 +104,4 @@ protected:
 	static void printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &text, const float &x, const float &y, const Gchart::AllignMode &m, const float &padding);
 };
 
-#endif /* __G_CHART_HPP__ */
+#endif /* __GCHART_HPP__ */

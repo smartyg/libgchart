@@ -18,14 +18,19 @@
 
 #include "config.h"
 
+#include <features.h>
+
 #include "Gchart.hpp"
 
-#include <features.h>
 #include <gtkmm.h>
 #include <glibmm.h>
 #include <cairomm/cairomm.h>
 
 #include "GchartProvider.hpp"
+
+#define PADDING (5)
+#define BORDER_OFFSET (PADDING)
+#define DOT_RADIUS 2.0
 
 Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);

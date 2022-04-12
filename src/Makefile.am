@@ -19,15 +19,21 @@ libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
     $(GCHART_LIBS) \
     -lm
 
-sources_private_h =       \
+sources_private_h =
+
+sources_public_h =         \
+	Gchart.hpp         \
+	GchartProvider.hpp \
+	GchartChart.hpp    \
+	GchartPoint.hpp    \
+	GchartLabel.hpp    \
+	GchartColor.hpp    \
 	helper.hpp
 
-sources_public_h = Gchart.hpp \
-	GchartProvider.hpp
-
-sources_c =               \
-	Gchart.cpp \
-	helper.cpp
+sources_c =                \
+	Gchart.cpp         \
+	GchartProvider.cpp \
+	GchartChart.cpp
 
 libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
@@ -54,7 +60,7 @@ Gchart_@LIBRARY_API_VERSION@_gir_INCLUDES = GObject-2.0 Gtk-3.0
 Gchart_@LIBRARY_API_VERSION@_gir_CFLAGS = $(GCHART_CFLAGS) -I$(srcdir) -I$(builddir)
 Gchart_@LIBRARY_API_VERSION@_gir_LIBS = libgchart-@LIBRARY_API_VERSION@.la
 Gchart_@LIBRARY_API_VERSION@_gir_FILES = $(introspection_sources)
-Gchart_@LIBRARY_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "gchart.h"
+Gchart_@LIBRARY_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "gchart.hpp"
 INTROSPECTION_GIRS += Gchart-@LIBRARY_API_VERSION@.gir
 
 girdir = $(datadir)/gir-1.0
