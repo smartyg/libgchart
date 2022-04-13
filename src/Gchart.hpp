@@ -60,12 +60,11 @@ public:
 					const std::string &y1_label, const std::string &y1_unit, GchartValuePrint y1_print,
 					const std::string &y2_label, const std::string &y2_unit, GchartValuePrint y2_print);
 
-	bool reset (bool confirm = false);
-
 	bool addY1Chart (const GchartChart::Type &t, const int &identifier, const GchartColor &color, const GchartMap chart, GchartGetValue get_value);
 	bool addY2Chart (const GchartChart::Type &t, const int &identifier, const GchartColor &color, const GchartMap chart, GchartGetValue get_value);
 	bool removeY1Chart (const int &n);
 	bool removeY2Chart (const int &n);
+	bool reset (const bool confirm = false);
 
 protected:
 	enum AllignMode {

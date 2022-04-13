@@ -81,13 +81,6 @@ void Gchart::setLabels (const std::string &x_label, const std::string &x_unit, G
 	this->y2 = std::make_shared<GchartProvider> (y2_label, y2_unit, y2_print);
 }
 
-bool Gchart::reset (bool confirm) {
-	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
-	this->init = false;
-	this->zoom = 1.0;
-	this->x_center = NAN;
-}
-
 bool Gchart::addY1Chart (const GchartChart::Type &t, const int &identifier, const GchartColor &color, const GchartMap chart, GchartGetValue get_value) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 	bool ret = false;
@@ -112,6 +105,21 @@ bool Gchart::removeY1Chart (const int &n) {
 bool Gchart::removeY2Chart (const int &n) {
 	g_debug("%s:%d %s (%d)", __FILE__, __LINE__, __func__, n);
 	return this->y2->removeChart (n);
+}
+
+bool Gchart::reset (const bool confirm) {
+	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+	if (confirm) {
+		this->init = false;
+		this->zoom = 1.0;
+		this->x_center = NAN;
+		if (this->y1)
+			this->y1->reset (confirm);
+		if (this->y2)
+			this->y2->reset (confirm);
+		return true;
+	}
+	return false;
 }
 
 bool Gchart::onZoom (double dx, double dy) {
