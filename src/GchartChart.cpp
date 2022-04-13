@@ -70,10 +70,7 @@ GchartChart::~GchartChart (void) {
 }
 
 const float& GchartChart::operator[] (std::size_t idx) const {
-	auto it = this->_map.begin ();
-	for (int i = 0; i < idx; i++) {
-		++it;
-	}
+	const auto it = std::next (this->_map.begin (), idx);
 	return (*it).second;
 }
 
