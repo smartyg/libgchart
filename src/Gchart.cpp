@@ -340,7 +340,7 @@ void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 	}
 }
 
-void Gchart::drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) {
+void Gchart::drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const {
 	g_debug("%s:%d %s (%f, %f)", __FILE__, __LINE__, __func__, point->getX (), point->getY ());
 
 	double x_coord = this->getXCoord (point->getX ());
