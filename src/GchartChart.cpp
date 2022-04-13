@@ -150,6 +150,7 @@ float GchartChart::linear (const GchartMap &map, float &x, GchartMap::const_iter
 			return (x - x1) * (v.second - y1) / (v.first - x1) + y1;
 		}
 	}
+	return NAN;
 }
 
 float GchartChart::curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
