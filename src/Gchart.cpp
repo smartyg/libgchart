@@ -370,7 +370,7 @@ double Gchart::getYCoord (const float &y, const std::shared_ptr<GchartProvider> 
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	if (!std::isfinite (y)) return this->offset_bottom;
-	return this->offset_bottom + ((y - y_provider->y_min) * y_provider->y_scale);
+	return this->offset_bottom + ((y - y_provider->_y_min) * y_provider->_y_scale);
 }
 
 void Gchart::calculateMinMaxValues (const int &width, const int &height) {
@@ -402,14 +402,14 @@ void Gchart::calculateMinMaxValues (const int &width, const int &height) {
 
 	this->x_scale = (width - this->offset_left - this->offset_right) / (this->x_max - this->x_min);
 
-	this->y1->y_min = this->y1->getYMin (this->x_min, this->x_max);
-	this->y1->y_max = this->y1->getYMax (this->x_min, this->x_max);
-	this->y1->y_scale = (height - this->offset_top - this->offset_bottom) / (this->y1->y_max - this->y1->y_min);
+	this->y1->_y_min = this->y1->getYMin (this->x_min, this->x_max);
+	this->y1->_y_max = this->y1->getYMax (this->x_min, this->x_max);
+	this->y1->_y_scale = (height - this->offset_top - this->offset_bottom) / (this->y1->_y_max - this->y1->_y_min);
 
 	if (this->y2) {
-		this->y2->y_min = this->y2->getYMin (this->x_min, this->x_max);
-		this->y2->y_max = this->y2->getYMax (this->x_min, this->x_max);
-		this->y2->y_scale = (height - this->offset_top - this->offset_bottom) / (this->y2->y_max - this->y2->y_min);
+		this->y2->_y_min = this->y2->getYMin (this->x_min, this->x_max);
+		this->y2->_y_max = this->y2->getYMax (this->x_min, this->x_max);
+		this->y2->_y_scale = (height - this->offset_top - this->offset_bottom) / (this->y2->_y_max - this->y2->_y_min);
 	}
 
 	return;
@@ -454,7 +454,7 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	for(int j = 1; j < y_lines; j++)
 	{
 		double y = height - this->offset_bottom - j * ((height - this->offset_top - this->offset_bottom) / y_lines);
-		double value = j * ((this->y1->y_max - this->y1->y_min) / y_lines) + this->y1->y_min;
+		double value = j * ((this->y1->_y_max - this->y1->_y_min) / y_lines) + this->y1->_y_min;
 		horizontalSubLine (layer, value, this->y1->getLabel (), this->offset_left, y, width - this->offset_right);
 	}
 
@@ -463,19 +463,19 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	this->printText2 (layer, this->x_max, this->label, width - this->offset_right, height - this->offset_bottom, MIDDLE_TOP, 5);
 
 	/* draw the first and last labels on the Y1 axis */
-	this->printText2 (layer, this->y1->y_min, this->y1->getLabel (), this->offset_left, height - this->offset_bottom, RIGHT_MIDDLE, 5);
-	this->printText2 (layer, this->y1->y_max, this->y1->getLabel (), this->offset_left, this->offset_top, RIGHT_MIDDLE, 5);
+	this->printText2 (layer, this->y1->_y_min, this->y1->getLabel (), this->offset_left, height - this->offset_bottom, RIGHT_MIDDLE, 5);
+	this->printText2 (layer, this->y1->_y_max, this->y1->getLabel (), this->offset_left, this->offset_top, RIGHT_MIDDLE, 5);
 
 	if(this->y2)
 	{
 		/* draw the first and last labels on the Y2 axis */
-		this->printText2 (layer, this->y2->y_min, this->y2->getLabel (), width - this->offset_right, height - this->offset_bottom, LEFT_MIDDLE, 5);
-		this->printText2 (layer, this->y2->y_max, this->y2->getLabel (), width - this->offset_right, this->offset_top, LEFT_MIDDLE, 5);
+		this->printText2 (layer, this->y2->_y_min, this->y2->getLabel (), width - this->offset_right, height - this->offset_bottom, LEFT_MIDDLE, 5);
+		this->printText2 (layer, this->y2->_y_max, this->y2->getLabel (), width - this->offset_right, this->offset_top, LEFT_MIDDLE, 5);
 
 		for(int j = 1; j < y_lines; j++)
 		{
 			double y = height - this->offset_bottom - j * ((height - this->offset_top - this->offset_bottom) / y_lines);
-			double value = j * ((this->y2->y_max - this->y2->y_min) / y_lines) + this->y2->y_min;
+			double value = j * ((this->y2->_y_max - this->y2->_y_min) / y_lines) + this->y2->_y_min;
 			this->printText2 (layer, value, this->y2->getLabel (), width - this->offset_right, y, LEFT_MIDDLE, 5);
 		}
 	}

@@ -36,7 +36,7 @@ private:
 	typedef GchartChart* iterator;
 	typedef const GchartChart* const_iterator;
 
-	float y_min, y_max, y_scale;
+	float _y_min, _y_max, _y_scale;
 	std::shared_ptr<GchartLabel> _label;
 	std::forward_list<GchartChart> _charts;
 

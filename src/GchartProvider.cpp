@@ -35,9 +35,9 @@
 
 GchartProvider::GchartProvider (const std::string &label, const std::string &unit, GchartValuePrint print) {
 	this->_label = std::make_shared<GchartLabel> (label, unit, print);
-	this->y_min = NAN;
-	this->y_max = NAN;
-	this->y_scale = 1.0;
+	this->_y_min = NAN;
+	this->_y_max = NAN;
+	this->_y_scale = 1.0;
 }
 
 GchartProvider::~GchartProvider (void) {
@@ -164,9 +164,9 @@ std::forward_list<GchartChart>::const_iterator GchartProvider::begin (void) cons
 
 void GchartProvider::reset (bool confirm) {
 	if (confirm) {
-		this->y_min = NAN;
-		this->y_max = NAN;
-		this->y_scale = 1.0;
+		this->_y_min = NAN;
+		this->_y_max = NAN;
+		this->_y_scale = 1.0;
 		this->_charts.clear ();
 	}
 }
