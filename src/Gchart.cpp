@@ -104,9 +104,14 @@ bool Gchart::addY2Chart (const GchartChart::Type &t, const int &identifier, cons
 		return this->y2->addChart (t, identifier, color, chart, get_value);
 }
 
-bool Gchart::removeY1Chart (int n) {
-	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+bool Gchart::removeY1Chart (const int &n) {
+	g_debug("%s:%d %s (%d)", __FILE__, __LINE__, __func__, n);
+	return this->y1->removeChart (n);
+}
 
+bool Gchart::removeY2Chart (const int &n) {
+	g_debug("%s:%d %s (%d)", __FILE__, __LINE__, __func__, n);
+	return this->y2->removeChart (n);
 }
 
 bool Gchart::onZoom (double dx, double dy) {

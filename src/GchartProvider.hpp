@@ -46,6 +46,7 @@ public:
 	GchartProvider (const std::string &label, const std::string &unit, GchartValuePrint print);
 	~GchartProvider (void);
 
+	bool removeChart (const int &identifier);
 	/* If charts is changed, call this->drawing->reload(); */
 	float getYMax () const;
 	float getYMax (const float &x_min, const float &x_max) const;

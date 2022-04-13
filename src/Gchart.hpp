@@ -64,8 +64,8 @@ public:
 
 	bool addY1Chart (const GchartChart::Type &t, const int &identifier, const GchartColor &color, const GchartMap chart, GchartGetValue get_value);
 	bool addY2Chart (const GchartChart::Type &t, const int &identifier, const GchartColor &color, const GchartMap chart, GchartGetValue get_value);
-	bool removeY1Chart (int n);
-	bool removeY2Chart (int n);
+	bool removeY1Chart (const int &n);
+	bool removeY2Chart (const int &n);
 
 protected:
 	enum AllignMode {

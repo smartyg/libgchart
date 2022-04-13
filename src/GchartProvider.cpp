@@ -51,6 +51,19 @@ bool GchartProvider::addChart (const GchartChart::Type &t, const int &identifier
 	return false;
 }
 
+bool GchartProvider::removeChart (const int &identifier) {
+	for (auto it = this->_charts.before_begin (); it != this->_charts.end (); ++it) {
+		const auto it_next = std::next (it, 1);
+		if (it_next == this->_charts.end ()) break;
+		if (identifier == (*it_next).getIdentifier ())
+		{
+			this->_charts.erase_after (it);
+			return true;
+		}
+	}
+	return false;
+}
+
 float GchartProvider::getYMax (void) const {
 	float y_max = NAN;
 	for (const auto &chart : this->_charts) {
