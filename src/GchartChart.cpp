@@ -154,17 +154,29 @@ float GchartChart::linear (const GchartMap &map, float &x, GchartMap::const_iter
 }
 
 float GchartChart::curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+	(void)map;
+	(void)x;
+	(void)it;
 	return 0.0f;
 }
 
 float GchartChart::curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+	(void)map;
+	(void)x;
+	(void)it;
 	return 0.0f;
 }
 
 float GchartChart::curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+	(void)map;
+	(void)x;
+	(void)it;
 	return 0.0f;
 }
 
 float GchartChart::curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it) {
+	(void)map;
+	(void)x;
+	(void)it;
 	return 0.0f;
 }
