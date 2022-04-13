@@ -95,6 +95,7 @@ bool Gchart::addY2Chart (const GchartChart::Type &t, const int &identifier, cons
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 	if (this->y2)
 		return this->y2->addChart (t, identifier, color, chart, get_value);
+	return false;
 }
 
 bool Gchart::removeY1Chart (const int &n) {
