@@ -75,6 +75,13 @@ AC_C_INLINE
 AC_FUNC_ERROR_AT_LINE
 
 # Check which option are enabled and disabled
+# Let user decide which GTK(mm) version to compile for (gtk3 or gtk4)
+AC_ARG_WITH([gtk-version],
+            [AS_HELP_STRING([--with-gtk-version],
+              [set gtk version to compile against (gtk3 or gtk4 (default))])],
+            [],
+            [with_gtk_version=gtk4])
+
 # use debuging
 AC_ARG_ENABLE([debug],
 	[AS_HELP_STRING([--enable-debug], [Turn on debugging @<:@default=disabled@:>@])],
@@ -105,10 +112,17 @@ AC_ARG_ENABLE([docs],
 	esac],
 	[docs=true])
 
+	AS_IF([test "x$with_gtk_version" = "xgtk3"], [
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4 > 2.66.0])
+PKG_CHECK_MODULES([CAIROMM], [cairomm-1.0])
+],[
 PKG_CHECK_MODULES([GTK], [gtk4 >= 4.6.0])
 PKG_CHECK_MODULES([GTKMM], [gtkmm-4.0 >= 4.6.0])
 PKG_CHECK_MODULES([GLIBMM], [glibmm-2.68])
 PKG_CHECK_MODULES([CAIROMM], [cairomm-1.16])
+])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])
@@ -175,6 +189,14 @@ then
 	AC_CONFIG_FILES([README])
 fi
 
+AS_IF([test "x$with_gtk_version" = "xgtk3"], [
+AC_DEFINE([_GTK3], [], [gtk3 flag])
+],[
+AC_DEFINE([_GTK4], [], [gtk4 flag])
+])
+
+AM_CONDITIONAL([GTK3], [test x$with_gtk_version = xgtk3])
+AM_CONDITIONAL([GTK4], [test x$with_gtk_version = xgtk4])
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 AM_CONDITIONAL([RELEASE], [test x$release = xtrue])
 AM_CONDITIONAL([DOCS], [test x$docs = xtrue])
