@@ -237,7 +237,7 @@ void Gchart::calulateOffsets (const int &width, const int &height) {
 void Gchart::drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value, const float &y1_info_value, const float &y2_info_value) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
-	float h, offset, x_value, n;
+	float h, offset, n;
 	Cairo::TextExtents extents;
 
 	layer->set_font_size (15);
