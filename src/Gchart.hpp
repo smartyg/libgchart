@@ -91,8 +91,8 @@ protected:
 	void drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_min, const float &x_max, const float &x_hint);
 	void drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height);
 
-	const double getXCoord (const float &x) const;
-	const double getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const;
+	double getXCoord (const float &x) const;
+	double getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const;
 	void calculateMinMaxValues (const int &width, const int &height);
 	void drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, int &x_lines);
 

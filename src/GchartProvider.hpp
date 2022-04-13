@@ -47,12 +47,12 @@ public:
 	~GchartProvider (void);
 
 	/* If charts is changed, call this->drawing->reload(); */
-	const float getYMax () const;
-	const float getYMax (const float &x_min, const float &x_max) const;
-	const float getYMin () const;
-	const float getYMin (const float &x_min, const float &x_max) const;
-	const float getXMax () const;
-	const float getXMin () const;
+	float getYMax () const;
+	float getYMax (const float &x_min, const float &x_max) const;
+	float getYMin () const;
+	float getYMin (const float &x_min, const float &x_max) const;
+	float getXMax () const;
+	float getXMin () const;
 	const std::shared_ptr<GchartLabel>& getLabel (void) const;
 	const GchartChart& operator[] (const int &identifier) const;
 	std::forward_list<GchartChart>::const_iterator end (void) const noexcept;

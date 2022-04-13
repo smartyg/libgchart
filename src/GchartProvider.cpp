@@ -51,7 +51,7 @@ bool GchartProvider::addChart (const GchartChart::Type &t, const int &identifier
 	return false;
 }
 
-const float GchartProvider::getYMax (void) const {
+float GchartProvider::getYMax (void) const {
 	float y_max = NAN;
 	for (const auto &chart : this->_charts) {
 		for (const auto &v : chart) {
@@ -64,7 +64,7 @@ const float GchartProvider::getYMax (void) const {
 	return y_max;
 }
 
-const float GchartProvider::getYMax (const float &x_min, const float &x_max) const {
+float GchartProvider::getYMax (const float &x_min, const float &x_max) const {
 	float y_max = NAN;
 	for (const auto &chart : this->_charts) {
 		for (const auto &v : chart) {
@@ -79,7 +79,7 @@ const float GchartProvider::getYMax (const float &x_min, const float &x_max) con
 	return y_max;
 }
 
-const float GchartProvider::getYMin (void) const {
+float GchartProvider::getYMin (void) const {
 	float y_min = NAN;
 	for (const auto &chart : this->_charts) {
 		for (const auto &v : chart) {
@@ -92,7 +92,7 @@ const float GchartProvider::getYMin (void) const {
 	return y_min;
 }
 
-const float GchartProvider::getYMin (const float &x_min, const float &x_max) const {
+float GchartProvider::getYMin (const float &x_min, const float &x_max) const {
 	float y_min = NAN;
 	for (const auto &chart : this->_charts) {
 		for (const auto &v : chart) {
@@ -107,7 +107,7 @@ const float GchartProvider::getYMin (const float &x_min, const float &x_max) con
 	return y_min;
 }
 
-const float GchartProvider::getXMax (void) const {
+float GchartProvider::getXMax (void) const {
 	float x_max = NAN;
 	for (const auto &chart : this->_charts) {
 		if (!std::isfinite (x_max))
@@ -118,7 +118,7 @@ const float GchartProvider::getXMax (void) const {
 	return x_max;
 }
 
-const float GchartProvider::getXMin (void) const {
+float GchartProvider::getXMin (void) const {
 	float x_min = NAN;
 	for (const auto &c : this->_charts) {
 		if (!std::isfinite (x_min))

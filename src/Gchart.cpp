@@ -345,14 +345,14 @@ void Gchart::drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 	layer->move_to (x_coord, height - y_coord);
 }
 
-const double Gchart::getXCoord (const float &x) const {
+double Gchart::getXCoord (const float &x) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	if (!std::isfinite (x)) return this->offset_left;
 	return this->offset_left + ((x - this->x_min) * this->x_scale);
 }
 
-const double Gchart::getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const {
+double Gchart::getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	if (!std::isfinite (y)) return this->offset_bottom;
