@@ -124,7 +124,7 @@ bool Gchart::reset (const bool confirm) {
 }
 
 bool Gchart::onZoom (double dx, double dy) {
-	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, dx, dy);
 	this->zoom *= dx;
 	this->x_center = this->x_mouse_pointer;
 	this->update_buffer = true;
@@ -142,7 +142,7 @@ void Gchart::onMouseMove (double x, double y) {
 }
 
 bool Gchart::onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state) {
-	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+	g_debug("%s:%d %s (%d, %d, %d)", __FILE__, __LINE__, __func__, keyval, keycode, static_cast<int>(state));
 	return true;
 }
 
@@ -411,8 +411,7 @@ void Gchart::calculateMinMaxValues (const int &width, const int &height) {
 		this->y2->y_max = this->y2->getYMax (this->x_min, this->x_max);
 		this->y2->y_scale = (height - this->offset_top - this->offset_bottom) / (this->y2->y_max - this->y2->y_min);
 	}
-	//g_debug ("%s: %f, %f, %f, %f, %f, %f, %f, %f, %f", this->x_min, this->x_max, this->x_scale, this->y1->y_min, this->y1->y_max, this->y1->y_scale, this->y2->y_min, this->y2->y_max, this->y2->y_scale);
-	g_debug ("%s: %f, %f, %f, %f, %f, %f", __func__, this->x_min, this->x_max, this->x_scale, this->y1->y_min, this->y1->y_max, this->y1->y_scale);
+
 	return;
 }
 
