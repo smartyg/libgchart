@@ -31,11 +31,12 @@ typedef float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::co
 
 class GchartChart {
 private:
-	GchartGetValue _get_value;
-	const GchartMap _map;
-	void *_user_data;
 	const int _identifier;
 	const GchartColor _color;
+	const GchartMap _map;
+	GchartGetValue _get_value;
+	void *_user_data;
+
 
 public:
 	enum Type {
