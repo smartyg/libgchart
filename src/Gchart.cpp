@@ -296,15 +296,15 @@ void Gchart::drawBuffer (Cairo::RefPtr<Cairo::Surface> surface) {
 	layer->set_dash(dashes, 0);
 	this->setLineAtributes (layer, 1.0, Cairo::Context::LineJoin::ROUND, Cairo::Context::LineCap::ROUND);
 	//layer->set_source_rgba (1, 0, 0, 1);
-	this->drawChart (layer, this->y1, height, this->x_min, this->x_max, (static_cast<float>(x_lines) / 10));
+	this->drawChart (layer, this->y1, height, (static_cast<float>(x_lines) / 10));
 	if (this->y2) {
 		//layer->set_source_rgba (0, 0.6, 0, 1);
-		drawChart (layer, this->y2, height, this->x_min, this->x_max, (static_cast<float>(x_lines) / 10));
+		drawChart (layer, this->y2, height, (static_cast<float>(x_lines) / 10));
 	}
 }
 
-void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_min, const float &x_max, const float &x_hint = NAN) {
-	g_debug("%s:%d %s (-, -, %d, %f, %f, %d)", __FILE__, __LINE__, __func__, height, x_min, x_max, x_hint);
+void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint = NAN) const {
+	g_debug("%s:%d %s (-, -, %d, %f)", __FILE__, __LINE__, __func__, height, x_hint);
 
 	for (const GchartChart &c : *(y.get ())) {
 		const GchartColor& color = c.getColor ();
@@ -312,7 +312,7 @@ void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 
 		layer->begin_new_path ();
 		layer->set_source_rgba (color._red, color._green, color._blue, color._alpha);
-		point = c.getPoint (x_min);
+		point = c.getPoint (this->x_min);
 		point_prev = point;
 		this->drawPoint (layer, y, point, height);
 
@@ -326,7 +326,7 @@ void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 			this->drawPoint (layer, y, point, height);
 		}
 
-		point = c.getPoint (x_max);
+		point = c.getPoint (this->x_max);
 		this->drawPoint (layer, y, point, height);
 	}
 }
