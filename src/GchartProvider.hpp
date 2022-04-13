@@ -19,8 +19,6 @@
 #ifndef __GCHART_PROVIDER_HPP__
 #define __GCHART_PROVIDER_HPP__
 
-#include <features.h>
-
 #include <memory>
 #include <string>
 #include <iterator>
