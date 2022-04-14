@@ -40,47 +40,27 @@ AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 
-# Do not automatically add -g -O2 to the compiler
-: ${CFLAGS=""}
-
-# Check for language support
-AC_LANG([C])
-AC_LANG([C++])
-
-# Checks for programs.
-AC_PROG_CXX
-AC_PROG_CXXCPP
-AC_PROG_CXX_C_O
-
-# Check for c++ language versions
-AX_CXX_COMPILE_STDCXX(11, ext, mandatory)
-AX_CXX_COMPILE_STDCXX(14, ext, optional)
-AX_CXX_COMPILE_STDCXX(17, ext, optional)
-# AX_CXX_COMPILE_STDCXX(20, ext, optional)
-
-dnl Initialize Libtool
-LT_INIT
-
-dnl Check if Libtool is present
-dnl Libtool is used for building share libraries 
-AC_PROG_LIBTOOL
-
-# Checks for header files.
-AC_CHECK_HEADERS([libintl.h math.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_C_INLINE
-
-# Checks for library functions.
-AC_FUNC_ERROR_AT_LINE
-
 # Check which option are enabled and disabled
 # Let user decide which GTK(mm) version to compile for (gtk3 or gtk4)
-AC_ARG_WITH([gtk-version],
-            [AS_HELP_STRING([--with-gtk-version],
-              [set gtk version to compile against (gtk3 or gtk4 (default))])],
-            [],
-            [with_gtk_version=gtk4])
+AC_ARG_ENABLE([gtk3],
+	[AS_HELP_STRING([--enable-gtk3], [Turn on debugging @<:@default=auto:>@])],
+	[case "${enableval}" in
+		auto) enable_gtk3=auto ;;
+		yes) enable_gtk3=yes ;;
+		no) enable_gtk3=no ;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-gtk3]) ;;
+	esac],
+	[enable_gtk3=auto])
+
+AC_ARG_ENABLE([gtk4],
+	[AS_HELP_STRING([--enable-gtk3], [Turn on debugging @<:@default=auto:>@])],
+	[case "${enableval}" in
+		auto) enable_gtk4=auto ;;
+		yes) enable_gtk4=yes ;;
+		no) enable_gtk4=no ;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-gtk3]) ;;
+	esac],
+	[enable_gtk4=auto])
 
 # use debuging
 AC_ARG_ENABLE([debug],
@@ -112,17 +92,64 @@ AC_ARG_ENABLE([docs],
 	esac],
 	[docs=true])
 
-	AS_IF([test "x$with_gtk_version" = "xgtk3"], [
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.24.0])
-PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
-PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4 > 2.66.0])
-PKG_CHECK_MODULES([CAIROMM], [cairomm-1.0])
-],[
-PKG_CHECK_MODULES([GTK], [gtk4 >= 4.6.0])
-PKG_CHECK_MODULES([GTKMM], [gtkmm-4.0 >= 4.6.0])
-PKG_CHECK_MODULES([GLIBMM], [glibmm-2.68])
-PKG_CHECK_MODULES([CAIROMM], [cairomm-1.16])
-])
+
+# Do not automatically add -g -O2 to the compiler
+: ${CFLAGS=""}
+
+# Check for language support
+AC_LANG([C])
+AC_LANG([C++])
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_PROG_CXX_C_O
+
+# Check for c++ language versions
+AX_CXX_COMPILE_STDCXX(11, ext, mandatory)
+AX_CXX_COMPILE_STDCXX(14, ext, optional)
+AX_CXX_COMPILE_STDCXX(17, ext, optional)
+# AX_CXX_COMPILE_STDCXX(20, ext, optional)
+
+dnl Initialize Libtool
+LT_INIT
+
+dnl Check if Libtool is present
+dnl Libtool is used for building share libraries
+AC_PROG_LIBTOOL
+
+# Checks for header files.
+AC_CHECK_HEADERS([libintl.h math.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_INLINE
+
+# Checks for library functions.
+AC_FUNC_ERROR_AT_LINE
+
+PKG_PROG_PKG_CONFIG([0.28])
+
+AS_IF([test "x$enable_gtk3" = "xauto"], [
+PKG_CHECK_EXISTS([gtkmm-3.0 >= 3.24.0], [enable_gtk3=yes], [enable_gtk3=no])
+],[])
+
+AS_IF([test "x$enable_gtk4" = "xauto"], [
+PKG_CHECK_EXISTS([gtkmm-4.0 >= 4.6.0], [enable_gtk4=yes], [enable_gtk4=no])
+],[])
+
+AS_IF([test "x$enable_gtk3" = "xyes"], [
+PKG_CHECK_MODULES([GTK3], [gtk+-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GTKMM3], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GLIBMM3], [glibmm-2.4 > 2.66.0])
+PKG_CHECK_MODULES([CAIROMM3], [cairomm-1.0])
+],[])
+
+AS_IF([test "x$enable_gtk4" = "xyes"], [
+PKG_CHECK_MODULES([GTK4], [gtk4 >= 4.6.0])
+PKG_CHECK_MODULES([GTKMM4], [gtkmm-4.0 >= 4.6.0])
+PKG_CHECK_MODULES([GLIBMM4], [glibmm-2.68])
+PKG_CHECK_MODULES([CAIROMM4], [cairomm-1.16])
+],[])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])
@@ -189,14 +216,16 @@ then
 	AC_CONFIG_FILES([README])
 fi
 
-AS_IF([test "x$with_gtk_version" = "xgtk3"], [
-AC_DEFINE([_GTK3], [], [gtk3 flag])
-],[
-AC_DEFINE([_GTK4], [], [gtk4 flag])
-])
+AS_IF([test "x$enable_gtk3" = "xyes"], [
+AC_DEFINE([_ENABLE_GTK3], [], [gtk3 flag])
+],[])
 
-AM_CONDITIONAL([GTK3], [test x$with_gtk_version = xgtk3])
-AM_CONDITIONAL([GTK4], [test x$with_gtk_version = xgtk4])
+AS_IF([test "x$enable_gtk4" = "xyes"], [
+AC_DEFINE([_ENABLE_GTK4], [], [gtk4 flag])
+],[])
+
+AM_CONDITIONAL([ENABLE_GTK3], [test "x$enable_gtk3" = "xyes"])
+AM_CONDITIONAL([ENABLE_GTK4], [test "x$enable_gtk4" = "xyes"])
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 AM_CONDITIONAL([RELEASE], [test x$release = xtrue])
 AM_CONDITIONAL([DOCS], [test x$docs = xtrue])
@@ -204,5 +233,5 @@ AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_CONDITIONAL([HAVE_DOT], [test -n "$DOT"])
 
-AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart.pc])
+AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart-gtk3.pc libgchart-gtk4.pc])
 AC_OUTPUT

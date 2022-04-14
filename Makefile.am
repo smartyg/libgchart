@@ -38,7 +38,13 @@ export AM_CXXFLAGS
 ## pkg-config files are also used for architecture-independent data packages,
 ## in which case the correct install location would be $(datadir)/pkgconfig.
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgchart.pc
+pkgconfig_DATA =
+if ENABLE_GTK3
+pkgconfig_DATA += libgchart-gtk3.pc
+endif
+if ENABLE_GTK4
+pkgconfig_DATA += libgchart-gtk4.pc
+endif
 
 noinst_HEADERS = config.h
 

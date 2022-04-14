@@ -1,23 +1,4 @@
 ## Process this file with automake to produce Makefile.in
-lib_LTLIBRARIES = libgchart-@LIBRARY_API_VERSION@.la
-
-GCHART_CPPFLAGS = @GTK_CFLAGS@ @GLIBMM_CFLAGS@ @CAIROMM_CFLAGS@ @GTKMM_CFLAGS@
-
-GCHART_LIBS = @M_LIBS@ @GTK_LIBS@ @GLIBMM_LIBS@ @CAIROMM_LIBS@ @GTKMM_LIBS@
-
-## Shared library
-libgchart_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
-    $(AM_CPPFLAGS)          \
-    $(WARN_CPPFLAGS)        \
-    $(DISABLE_DEPRECATED) \
-    $(GCHART_CPPFLAGS)      \
-    -DG_LOG_DOMAIN=\"Gchart\"
-
-libgchart_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
-
-libgchart_@LIBRARY_API_VERSION@_la_LIBADD = \
-    $(GCHART_LIBS) \
-    -lm
 
 sources_private_h =
 
@@ -35,7 +16,61 @@ sources_c =                \
 	GchartProvider.cpp \
 	GchartChart.cpp
 
-libgchart_@LIBRARY_API_VERSION@_la_SOURCES = \
+GCHART_GTK3_CPPFLAGS =
+GCHART_GTK3_LIBS = @M_LIBS@
+GCHART_GTK4_CPPFLAGS =
+GCHART_GTK4_LIBS = @M_LIBS@
+
+if ENABLE_GTK3
+GCHART_GTK3_CPPFLAGS += @GTK3_CFLAGS@ @GLIBMM3_CFLAGS@ @CAIROMM3_CFLAGS@ @GTKMM3_CFLAGS@
+GCHART_GTK3_LIBS += @GTK3_LIBS@ @GLIBMM3_LIBS@ @CAIROMM3_LIBS@ @GTKMM3_LIBS@
+endif
+if ENABLE_GTK4
+GCHART_GTK4_CPPFLAGS += @GTK4_CFLAGS@ @GLIBMM4_CFLAGS@ @CAIROMM4_CFLAGS@ @GTKMM4_CFLAGS@
+GCHART_GTK4_LIBS += @GTK4_LIBS@ @GLIBMM4_LIBS@ @CAIROMM4_LIBS@ @GTKMM4_LIBS@
+endif
+
+lib_LTLIBRARIES =
+if ENABLE_GTK3
+lib_LTLIBRARIES += libgchart-gtk3-@LIBRARY_API_VERSION@.la
+endif
+if ENABLE_GTK4
+lib_LTLIBRARIES += libgchart-gtk4-@LIBRARY_API_VERSION@.la
+endif
+
+## Shared library
+libgchart_gtk3_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
+    $(AM_CPPFLAGS)          \
+    $(WARN_CPPFLAGS)        \
+    $(DISABLE_DEPRECATED) \
+    $(GCHART_GTK3_CPPFLAGS)      \
+    -DG_LOG_DOMAIN=\"Gchart\"
+
+libgchart_gtk3_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
+
+libgchart_gtk3_@LIBRARY_API_VERSION@_la_LIBADD = \
+    $(GCHART_GTK3_LIBS) \
+    -lm
+
+libgchart_gtk3_@LIBRARY_API_VERSION@_la_SOURCES = \
+	$(sources_public_h)  \
+	$(sources_private_h) \
+	$(sources_c)
+
+libgchart_gtk4_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
+    $(AM_CPPFLAGS)          \
+    $(WARN_CPPFLAGS)        \
+    $(DISABLE_DEPRECATED) \
+    $(GCHART_GTK4_CPPFLAGS)      \
+    -DG_LOG_DOMAIN=\"Gchart\"
+
+libgchart_gtk4_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
+
+libgchart_gtk4_@LIBRARY_API_VERSION@_la_LIBADD = \
+    $(GCHART_GTK4_LIBS) \
+    -lm
+
+libgchart_gtk4_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
 	$(sources_private_h) \
 	$(sources_c)
