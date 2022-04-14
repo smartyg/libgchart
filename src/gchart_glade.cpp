@@ -26,6 +26,8 @@
 
 #include <gtkmm/main.h>
 
+extern "C" void gcharts_glade_init (void);
+
 void gcharts_register (void) {
 	Gchart::register_type ();
 }

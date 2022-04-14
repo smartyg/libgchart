@@ -16,26 +16,21 @@ sources_c =                \
 	GchartProvider.cpp \
 	GchartChart.cpp
 
+lib_LTLIBRARIES =
 GCHART_GTK3_CPPFLAGS =
 GCHART_GTK3_LIBS = @M_LIBS@
 GCHART_GTK4_CPPFLAGS =
 GCHART_GTK4_LIBS = @M_LIBS@
 
 if ENABLE_GTK3
+lib_LTLIBRARIES += libgchart-gtk3-@LIBRARY_API_VERSION@.la
 GCHART_GTK3_CPPFLAGS += @GTK3_CFLAGS@ @GLIBMM3_CFLAGS@ @CAIROMM3_CFLAGS@ @GTKMM3_CFLAGS@
 GCHART_GTK3_LIBS += @GTK3_LIBS@ @GLIBMM3_LIBS@ @CAIROMM3_LIBS@ @GTKMM3_LIBS@
 endif
 if ENABLE_GTK4
+lib_LTLIBRARIES += libgchart-gtk4-@LIBRARY_API_VERSION@.la
 GCHART_GTK4_CPPFLAGS += @GTK4_CFLAGS@ @GLIBMM4_CFLAGS@ @CAIROMM4_CFLAGS@ @GTKMM4_CFLAGS@
 GCHART_GTK4_LIBS += @GTK4_LIBS@ @GLIBMM4_LIBS@ @CAIROMM4_LIBS@ @GTKMM4_LIBS@
-endif
-
-lib_LTLIBRARIES =
-if ENABLE_GTK3
-lib_LTLIBRARIES += libgchart-gtk3-@LIBRARY_API_VERSION@.la
-endif
-if ENABLE_GTK4
-lib_LTLIBRARIES += libgchart-gtk4-@LIBRARY_API_VERSION@.la
 endif
 
 ## Shared library
@@ -55,7 +50,9 @@ libgchart_gtk3_@LIBRARY_API_VERSION@_la_LIBADD = \
 libgchart_gtk3_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
 	$(sources_private_h) \
-	$(sources_c)
+	$(sources_c) \
+	gchart_glade.h \
+	gchart_glade.cpp
 
 libgchart_gtk4_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \

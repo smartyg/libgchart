@@ -32,9 +32,9 @@
 #define BORDER_OFFSET (PADDING)
 #define DOT_RADIUS 2.0
 
-#ifdef GTK4
+#ifdef _ENABLE_GTK4
 #define LINECAP_ROUND ROUND
-#define LINECAP_BUTT BUT
+#define LINECAP_BUTT BUTT
 #define LINEJOIN_ROUND ROUND
 #define LINEJOIN_MITER MITER
 #define ARGB32 ARGB32
@@ -54,7 +54,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	this->plot_lines = true;
 	this->plot_dots = true;
 
-#ifdef GTK4
+#ifdef _ENABLE_GTK4
 	m_scroll = Gtk::EventControllerScroll::create ();
 	m_move = Gtk::EventControllerMotion::create ();
 	m_button = Gtk::EventControllerKey::create ();
@@ -70,6 +70,13 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	m_scroll->signal_scroll ().connect (sigc::mem_fun (*this, &Gchart::onZoom), false);
 	m_move->signal_motion ().connect (sigc::mem_fun (*this, &Gchart::onMouseMove), false);
 	m_button->signal_key_pressed ().connect (sigc::mem_fun (*this, &Gchart::onKeyPressed), false);
+#endif
+#ifdef _ENABLE_GTK3
+	this->set_events (Gdk::EventMask::POINTER_MOTION_MASK | Gdk::EventMask::BUTTON_PRESS_MASK | Gdk::EventMask::SCROLL_MASK);
+	this->signal_draw ().connect (sigc::mem_fun (*this, &Gchart::onDraw_gtk3), false);
+	this->signal_scroll_event ().connect (sigc::mem_fun (*this, &Gchart::onZoom_gtk3), false);
+	this->signal_motion_notify_event ().connect (sigc::mem_fun (*this, &Gchart::onMouseMove_gtk3), false);
+	this->signal_button_press_event ().connect (sigc::mem_fun (*this, &Gchart::onKeyPressed_gtk3), false);
 #endif
 }
 
@@ -139,6 +146,12 @@ bool Gchart::reset (const bool confirm) {
 	return false;
 }
 
+#ifdef _ENABLE_GTK3
+bool Gchart::onZoom_gtk3 (const GdkEventScroll *e) {
+	return this->onZoom (e->delta_x, e->delta_y);
+}
+#endif
+
 bool Gchart::onZoom (double dx, double dy) {
 	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, dx, dy);
 	this->zoom *= dx;
@@ -148,6 +161,13 @@ bool Gchart::onZoom (double dx, double dy) {
 	return true;
 }
 
+#ifdef _ENABLE_GTK3
+bool Gchart::onMouseMove_gtk3 (const GdkEventMotion *e) {
+	this->onMouseMove (e->x, e->y);
+	return true;
+}
+#endif
+
 void Gchart::onMouseMove (double x, double y) {
 	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, x, y);
 	if (x != this->x_mouse_pointer) {
@@ -155,12 +175,27 @@ void Gchart::onMouseMove (double x, double y) {
 		this->x_mouse_pointer = x;
 		this->queue_draw ();
 	}
+	return;
 }
+
+#ifdef _ENABLE_GTK3
+bool Gchart::onKeyPressed_gtk3 (const GdkEventButton *e) {
+	(void)e;
+	return true;
+}
+#endif
 
 bool Gchart::onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state) {
 	g_debug("%s:%d %s (%d, %d, %d)", __FILE__, __LINE__, __func__, keyval, keycode, static_cast<int>(state));
 	return true;
 }
+
+#ifdef _ENABLE_GTK3
+bool Gchart::onDraw_gtk3 (const Cairo::RefPtr<Cairo::Context>& cr) {
+	this->onDraw (cr, this->get_allocated_width (), this->get_allocated_height ());
+	return true;
+}
+#endif
 
 void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
@@ -192,6 +227,7 @@ void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 			y2_value = (*(this->y2->begin ())).getValue (this->x_mouse_pointer);
 	}
 	this->drawInfo (cr, width, height, this->x_mouse_pointer, y1_value, y2_value);
+	return;
 }
 
 void Gchart::calulateOffsets (const int &width, const int &height) {
@@ -594,6 +630,7 @@ void Gchart::printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &
 	layer->show_text (text);
 }
 
+#ifdef _ENABLE_GTK3
 // Glade code
 GType Gchart::gtype = 0;
 
@@ -620,3 +657,4 @@ void Gchart::register_type (void) {
 
 	Glib::wrap_register (gtype, Gchart::wrap_new);
 }
+#endif
