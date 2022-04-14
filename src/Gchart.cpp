@@ -32,13 +32,13 @@
 #define BORDER_OFFSET (PADDING)
 #define DOT_RADIUS 2.0
 
-#ifdef _ENABLE_GTK4
+#if _ENABLE_GTK == 4
 #define LINECAP_ROUND ROUND
 #define LINECAP_BUTT BUTT
 #define LINEJOIN_ROUND ROUND
 #define LINEJOIN_MITER MITER
 #define ARGB32 ARGB32
-#else
+#elif _ENABLE_GTK == 3
 #define LINECAP_ROUND LINE_CAP_ROUND
 #define LINECAP_BUTT LINE_CAP_BUTT
 #define LINEJOIN_ROUND LINE_JOIN_ROUND
@@ -54,7 +54,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	this->plot_lines = true;
 	this->plot_dots = true;
 
-#ifdef _ENABLE_GTK4
+#if _ENABLE_GTK == 4
 	m_scroll = Gtk::EventControllerScroll::create ();
 	m_move = Gtk::EventControllerMotion::create ();
 	m_button = Gtk::EventControllerKey::create ();
@@ -71,7 +71,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	m_move->signal_motion ().connect (sigc::mem_fun (*this, &Gchart::onMouseMove), false);
 	m_button->signal_key_pressed ().connect (sigc::mem_fun (*this, &Gchart::onKeyPressed), false);
 #endif
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 	this->set_events (Gdk::EventMask::POINTER_MOTION_MASK | Gdk::EventMask::BUTTON_PRESS_MASK | Gdk::EventMask::SCROLL_MASK);
 	this->signal_draw ().connect (sigc::mem_fun (*this, &Gchart::onDraw_gtk3), false);
 	this->signal_scroll_event ().connect (sigc::mem_fun (*this, &Gchart::onZoom_gtk3), false);
@@ -146,7 +146,7 @@ bool Gchart::reset (const bool confirm) {
 	return false;
 }
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 bool Gchart::onZoom_gtk3 (const GdkEventScroll *e) {
 	return this->onZoom (e->delta_x, e->delta_y);
 }
@@ -161,7 +161,7 @@ bool Gchart::onZoom (double dx, double dy) {
 	return true;
 }
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 bool Gchart::onMouseMove_gtk3 (const GdkEventMotion *e) {
 	this->onMouseMove (e->x, e->y);
 	return true;
@@ -178,7 +178,7 @@ void Gchart::onMouseMove (double x, double y) {
 	return;
 }
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 bool Gchart::onKeyPressed_gtk3 (const GdkEventButton *e) {
 	(void)e;
 	return true;
@@ -190,7 +190,7 @@ bool Gchart::onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state)
 	return true;
 }
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 bool Gchart::onDraw_gtk3 (const Cairo::RefPtr<Cairo::Context>& cr) {
 	this->onDraw (cr, this->get_allocated_width (), this->get_allocated_height ());
 	return true;
@@ -630,7 +630,7 @@ void Gchart::printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &
 	layer->show_text (text);
 }
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 // Glade code
 GType Gchart::gtype = 0;
 

@@ -42,25 +42,15 @@ AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 
 # Check which option are enabled and disabled
 # Let user decide which GTK(mm) version to compile for (gtk3 or gtk4)
-AC_ARG_ENABLE([gtk3],
-	[AS_HELP_STRING([--enable-gtk3], [Turn on debugging @<:@default=auto:>@])],
+AC_ARG_ENABLE([gtk-version],
+	[AS_HELP_STRING([--enable-gtk-version], [Select the gtk version to compile for @<:@default=auto:>@])],
 	[case "${enableval}" in
-		auto) enable_gtk3=auto ;;
-		yes) enable_gtk3=yes ;;
-		no) enable_gtk3=no ;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-gtk3]) ;;
+		auto) gtk_version=auto ;;
+		gtk4) gtk_version=gtk4 ;;
+		gtk3) gtk_version=gtk3 ;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-gtk-version]) ;;
 	esac],
-	[enable_gtk3=auto])
-
-AC_ARG_ENABLE([gtk4],
-	[AS_HELP_STRING([--enable-gtk3], [Turn on debugging @<:@default=auto:>@])],
-	[case "${enableval}" in
-		auto) enable_gtk4=auto ;;
-		yes) enable_gtk4=yes ;;
-		no) enable_gtk4=no ;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-gtk3]) ;;
-	esac],
-	[enable_gtk4=auto])
+	[gtk_version=auto])
 
 # use debuging
 AC_ARG_ENABLE([debug],
@@ -92,6 +82,12 @@ AC_ARG_ENABLE([docs],
 	esac],
 	[docs=true])
 
+PKG_PROG_PKG_CONFIG([0.28])
+
+AS_IF([test "x$gtk_version" = "xauto"], [
+PKG_CHECK_EXISTS([gtkmm-3.0 >= 3.24.0], [gtk_version=gtk3], [])
+PKG_CHECK_EXISTS([gtkmm-4.0 >= 4.6.0], [gtk_version=gtk4], [])
+],[])
 
 # Do not automatically add -g -O2 to the compiler
 : ${CFLAGS=""}
@@ -107,8 +103,13 @@ AC_PROG_CXX_C_O
 
 # Check for c++ language versions
 AX_CXX_COMPILE_STDCXX(11, ext, mandatory)
+AS_IF([test "x$gtk_version" = "xgtk4"], [
+AX_CXX_COMPILE_STDCXX(14, ext, mandatory)
+AX_CXX_COMPILE_STDCXX(17, ext, mandatory)
+],[
 AX_CXX_COMPILE_STDCXX(14, ext, optional)
 AX_CXX_COMPILE_STDCXX(17, ext, optional)
+])
 # AX_CXX_COMPILE_STDCXX(20, ext, optional)
 
 dnl Initialize Libtool
@@ -127,29 +128,18 @@ AC_C_INLINE
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 
-PKG_PROG_PKG_CONFIG([0.28])
-
-AS_IF([test "x$enable_gtk3" = "xauto"], [
-PKG_CHECK_EXISTS([gtkmm-3.0 >= 3.24.0], [enable_gtk3=yes], [enable_gtk3=no])
-],[])
-
-AS_IF([test "x$enable_gtk4" = "xauto"], [
-PKG_CHECK_EXISTS([gtkmm-4.0 >= 4.6.0], [enable_gtk4=yes], [enable_gtk4=no])
-],[])
-
-AS_IF([test "x$enable_gtk3" = "xyes"], [
+AS_IF([test "x$gtk_version" = "xgtk3"], [
 PKG_CHECK_MODULES([GTK3], [gtk+-3.0 >= 3.24.0])
 PKG_CHECK_MODULES([GTKMM3], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
 PKG_CHECK_MODULES([GLIBMM3], [glibmm-2.4 > 2.66.0])
 PKG_CHECK_MODULES([CAIROMM3], [cairomm-1.0])
 ],[])
-
-AS_IF([test "x$enable_gtk4" = "xyes"], [
+AS_IF([test "x$gtk_version" = "xgtk4"], [
 PKG_CHECK_MODULES([GTK4], [gtk4 >= 4.6.0])
 PKG_CHECK_MODULES([GTKMM4], [gtkmm-4.0 >= 4.6.0])
 PKG_CHECK_MODULES([GLIBMM4], [glibmm-2.68])
 PKG_CHECK_MODULES([CAIROMM4], [cairomm-1.16])
-],[])
+])
 
 # Checks for libraries.
 AX_CHECK_LIB([m], [floor], [M])
@@ -216,16 +206,16 @@ then
 	AC_CONFIG_FILES([README])
 fi
 
-AS_IF([test "x$enable_gtk3" = "xyes"], [
-AC_DEFINE([_ENABLE_GTK3], [], [gtk3 flag])
-],[])
+AS_IF([test "x$gtk_version" = "xgtk3"], [
+AC_DEFINE([_ENABLE_GTK], [3], [Use GTK3 code])
+AC_CONFIG_FILES([libgchart-gtk3.pc])
+],[
+AC_DEFINE([_ENABLE_GTK], [4], [Use GTK4 code])
+AC_CONFIG_FILES([libgchart-gtk4.pc])
+])
 
-AS_IF([test "x$enable_gtk4" = "xyes"], [
-AC_DEFINE([_ENABLE_GTK4], [], [gtk4 flag])
-],[])
-
-AM_CONDITIONAL([ENABLE_GTK3], [test "x$enable_gtk3" = "xyes"])
-AM_CONDITIONAL([ENABLE_GTK4], [test "x$enable_gtk4" = "xyes"])
+AM_CONDITIONAL([ENABLE_GTK3], [test "x$gtk_version" = "xgtk3"])
+AM_CONDITIONAL([ENABLE_GTK4], [test "x$gtk_version" = "xgtk4"])
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 AM_CONDITIONAL([RELEASE], [test x$release = xtrue])
 AM_CONDITIONAL([DOCS], [test x$docs = xtrue])
@@ -233,5 +223,5 @@ AM_CONDITIONAL([HAVE_GIT], [test -n "$GIT"])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_CONDITIONAL([HAVE_DOT], [test -n "$DOT"])
 
-AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile docs/Doxyfile docs/Makefile libgchart-gtk3.pc libgchart-gtk4.pc])
+AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile docs/Doxyfile docs/Makefile])
 AC_OUTPUT

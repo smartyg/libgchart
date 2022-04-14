@@ -30,10 +30,10 @@
 #include "GchartChart.hpp"
 #include "GchartProvider.hpp"
 
-#ifdef _ENABLE_GTK4
+#if _ENABLE_GTK == 4
 #define CAIRO_ENUM_NS_CONTEXT Cairo::Context
 #define CAIRO_ENUM_NS_SURFACE Cairo::Surface
-#else
+#elif _ENABLE_GTK == 3
 #define CAIRO_ENUM_NS_CONTEXT Cairo
 #define CAIRO_ENUM_NS_SURFACE Cairo
 #endif
@@ -55,12 +55,11 @@ private:
 
 	Cairo::RefPtr<Cairo::Surface> buffer;
 
-#ifdef _ENABLE_GTK4
+#if _ENABLE_GTK == 4
 	Glib::RefPtr<Gtk::EventControllerScroll> m_scroll;
 	Glib::RefPtr<Gtk::EventControllerMotion> m_move;
 	Glib::RefPtr<Gtk::EventControllerKey> m_button;
-#endif
-#ifdef _ENABLE_GTK3
+#elif _ENABLE_GTK == 3
 	// Code to make Glade work
 	static GType gtype;
 	Gchart (GtkDrawingArea *gobj);
@@ -98,7 +97,7 @@ protected:
 		RIGHT_MIDDLE
 	};
 
-#ifdef _ENABLE_GTK3
+#if _ENABLE_GTK == 3
 	bool onDraw_gtk3 (const Cairo::RefPtr<Cairo::Context>& cr);
 	bool onZoom_gtk3 (const GdkEventScroll *e);
 	bool onMouseMove_gtk3 (const GdkEventMotion *e);
