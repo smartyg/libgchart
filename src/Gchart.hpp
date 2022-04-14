@@ -30,6 +30,14 @@
 #include "GchartChart.hpp"
 #include "GchartProvider.hpp"
 
+#ifdef GTK4
+#define CAIRO_ENUM_NS_CONTEXT Cairo::Context
+#define CAIRO_ENUM_NS_SURFACE Cairo::Surface
+#else
+#define CAIRO_ENUM_NS_CONTEXT Cairo
+#define CAIRO_ENUM_NS_SURFACE Cairo
+#endif
+
 class Gchart : public Gtk::DrawingArea {
 private:
 	std::shared_ptr<GchartProvider> y1, y2;
@@ -46,9 +54,16 @@ private:
 	int buffered_width, buffered_height;
 
 	Cairo::RefPtr<Cairo::Surface> buffer;
+
+#ifdef GTK4
 	Glib::RefPtr<Gtk::EventControllerScroll> m_scroll;
 	Glib::RefPtr<Gtk::EventControllerMotion> m_move;
 	Glib::RefPtr<Gtk::EventControllerKey> m_button;
+#endif
+	// Code to make Glade work
+	static GType gtype;
+	Gchart (GtkDrawingArea *gobj);
+	static Glib::ObjectBase *wrap_new (GObject* o);
 
 public:
 	Gchart (void);
@@ -65,6 +80,8 @@ public:
 	bool removeY1Chart (const int &n);
 	bool removeY2Chart (const int &n);
 	bool reset (const bool confirm = false);
+
+	static void register_type (void);
 
 protected:
 	enum AllignMode {
@@ -95,7 +112,7 @@ protected:
 	void calculateMinMaxValues (const int &width, const int &height);
 	void drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, int &x_lines);
 
-	static void setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const Cairo::Context::LineJoin &line_join, const Cairo::Context::LineCap &line_cap);
+	static void setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap);
 	static void drawSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &x1, const double &y1, const double &x2, const double &y2);
 	static void verticalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &y2);
 	static void horizontalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &x2);
