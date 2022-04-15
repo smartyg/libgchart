@@ -59,7 +59,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	m_move = Gtk::EventControllerMotion::create ();
 	m_button = Gtk::EventControllerKey::create ();
 
-	m_scroll->set_flags (Gtk::EventControllerScroll::Flags::HORIZONTAL);
+	m_scroll->set_flags (Gtk::EventControllerScroll::Flags::HORIZONTAL | Gtk::EventControllerScroll::Flags::VERTICAL);
 
 	this->add_controller(m_scroll);
 	this->add_controller(m_move);
@@ -154,8 +154,12 @@ bool Gchart::onZoom_gtk3 (const GdkEventScroll *e) {
 
 bool Gchart::onZoom (double dx, double dy) {
 	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, dx, dy);
-	this->zoom *= dx;
-	this->x_center = this->x_mouse_pointer;
+	if (dy == 0) {
+		this->x_center += dx * (this->x_max - this->x_min);
+	} else {
+		this->zoom += -dy;
+		this->x_center = this->x_mouse_pointer;
+	}
 	this->update_buffer = true;
 	this->queue_draw ();
 	return true;
@@ -168,10 +172,10 @@ bool Gchart::onMouseMove_gtk3 (const GdkEventMotion *e) {
 }
 #endif
 
-void Gchart::onMouseMove (double x, double y) {
-	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, x, y);
+void Gchart::onMouseMove (const double &x_coord, const double &y_coord) {
+	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, x_coord, y_coord);
+	float x = this->x_min + ((x_coord - this->offset_left) / this->x_scale);
 	if (x != this->x_mouse_pointer) {
-		// TODO: calculate widget pixels to x values
 		this->x_mouse_pointer = x;
 		this->queue_draw ();
 	}

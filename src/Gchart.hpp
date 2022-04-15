@@ -105,7 +105,7 @@ protected:
 #endif
 
 	bool onZoom (double dx, double dy);
-	void onMouseMove (double x, double y);
+	void onMouseMove (const double &x_coord, const double &y_coord);
 	bool onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state);
 
 	void onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
