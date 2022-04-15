@@ -26,7 +26,18 @@ if ENABLE_GTK3
 lib_LTLIBRARIES += libgchart-gtk3-@LIBRARY_API_VERSION@.la
 GCHART_GTK3_CPPFLAGS += @GTK3_CFLAGS@ @GLIBMM3_CFLAGS@ @CAIROMM3_CFLAGS@ @GTKMM3_CFLAGS@
 GCHART_GTK3_LIBS += @GTK3_LIBS@ @GLIBMM3_LIBS@ @CAIROMM3_LIBS@ @GTKMM3_LIBS@
+if ENABLE_GLADE
+gladedir = ${libdir}/glade/modules
+glade_LTLIBRARIES = libgladegchart.la
+libgladegchart_la_CPPFLAGS = @GTK3_CFLAGS@ @GTKMM3_CFLAGS@
+libgladegchart_la_LDFLAGS = -avoid-version
+libgladegchart_la_LIBADD = libgchart-gtk3-@LIBRARY_API_VERSION@.la @GLIBMM3_LIBS@
+libgladegchart_la_SOURCES = \
+	gchart_glade.h     \
+	gchart_glade.cpp
 endif
+endif
+
 if ENABLE_GTK4
 lib_LTLIBRARIES += libgchart-gtk4-@LIBRARY_API_VERSION@.la
 GCHART_GTK4_CPPFLAGS += @GTK4_CFLAGS@ @GLIBMM4_CFLAGS@ @CAIROMM4_CFLAGS@ @GTKMM4_CFLAGS@
@@ -50,9 +61,7 @@ libgchart_gtk3_@LIBRARY_API_VERSION@_la_LIBADD = \
 libgchart_gtk3_@LIBRARY_API_VERSION@_la_SOURCES = \
 	$(sources_public_h)  \
 	$(sources_private_h) \
-	$(sources_c) \
-	gchart_glade.h \
-	gchart_glade.cpp
+	$(sources_c)
 
 libgchart_gtk4_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \

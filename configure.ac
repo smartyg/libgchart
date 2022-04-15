@@ -52,6 +52,17 @@ AC_ARG_ENABLE([gtk-version],
 	esac],
 	[gtk_version=auto])
 
+# enable to build glade library and xml file, only for GTK3 build
+AC_ARG_ENABLE([glade],
+	[AS_HELP_STRING([--enable-glade], [Build glade library for GTK3 @<:@default=auto:>@])],
+	[case "${enableval}" in
+		auto) enable_glade=auto ;;
+		yes) enable_glade=yes ;;
+		no) enable_glade=no ;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-glade]) ;;
+	esac],
+	[enable_glade=auto])
+
 # use debuging
 AC_ARG_ENABLE([debug],
 	[AS_HELP_STRING([--enable-debug], [Turn on debugging @<:@default=disabled@:>@])],
@@ -88,6 +99,17 @@ AS_IF([test "x$gtk_version" = "xauto"], [
 PKG_CHECK_EXISTS([gtkmm-3.0 >= 3.24.0], [gtk_version=gtk3], [])
 PKG_CHECK_EXISTS([gtkmm-4.0 >= 4.6.0], [gtk_version=gtk4], [])
 ],[])
+
+AS_IF([test "x$gtk_version" = "xgtk3"], [
+AS_IF([test "x$enable_glade" == "xyes"], [
+AC_CHECK_PROG(GLADE_CHECK,glade,yes)
+AS_IF([test "x$GLADE_CHECK" != "xyes"], [AC_MSG_ERROR([Glade not installed.])])
+])
+AS_IF([test "x$enable_glade" == "xauto"], [
+AC_CHECK_PROG(GLADE_CHECK,glade,yes)
+AS_IF([test "x$GLADE_CHECK" != "xyes"], [enable_glade=no])
+])
+], [enable_glade=no])
 
 # Do not automatically add -g -O2 to the compiler
 : ${CFLAGS=""}
@@ -216,6 +238,7 @@ AC_CONFIG_FILES([libgchart-gtk4.pc])
 
 AM_CONDITIONAL([ENABLE_GTK3], [test "x$gtk_version" = "xgtk3"])
 AM_CONDITIONAL([ENABLE_GTK4], [test "x$gtk_version" = "xgtk4"])
+AM_CONDITIONAL([ENABLE_GLADE], [test "x$enable_glade" = "xyes"])
 AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 AM_CONDITIONAL([RELEASE], [test x$release = xtrue])
 AM_CONDITIONAL([DOCS], [test x$docs = xtrue])
