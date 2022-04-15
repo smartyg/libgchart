@@ -33,7 +33,7 @@ libgladegchart_la_CPPFLAGS = @GTK3_CFLAGS@ @GTKMM3_CFLAGS@
 libgladegchart_la_LDFLAGS = -avoid-version
 libgladegchart_la_LIBADD = libgchart-gtk3-@LIBRARY_API_VERSION@.la @GLIBMM3_LIBS@
 libgladegchart_la_SOURCES = \
-	gchart_glade.h     \
+	gchart_glade.h      \
 	gchart_glade.cpp
 endif
 endif
@@ -48,8 +48,8 @@ endif
 libgchart_gtk3_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \
     $(WARN_CPPFLAGS)        \
-    $(DISABLE_DEPRECATED) \
-    $(GCHART_GTK3_CPPFLAGS)      \
+    $(DISABLE_DEPRECATED)   \
+    $(GCHART_GTK3_CPPFLAGS) \
     -DG_LOG_DOMAIN=\"Gchart\"
 
 libgchart_gtk3_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
@@ -66,8 +66,8 @@ libgchart_gtk3_@LIBRARY_API_VERSION@_la_SOURCES = \
 libgchart_gtk4_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \
     $(WARN_CPPFLAGS)        \
-    $(DISABLE_DEPRECATED) \
-    $(GCHART_GTK4_CPPFLAGS)      \
+    $(DISABLE_DEPRECATED)   \
+    $(GCHART_GTK4_CPPFLAGS) \
     -DG_LOG_DOMAIN=\"Gchart\"
 
 libgchart_gtk4_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
