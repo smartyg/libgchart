@@ -22,6 +22,7 @@
 
 #include "Gchart.hpp"
 
+#include <algorithm>
 #include <sigc++/sigc++.h>
 #include <gtkmm.h>
 #include <glibmm.h>
