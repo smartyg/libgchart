@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <string>
+#include <sigc++/sigc++.h>
 #include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
@@ -66,6 +67,8 @@ private:
 	static Glib::ObjectBase *wrap_new (GObject* o);
 #endif
 
+	sigc::signal<void(const float&)> _signal_mouse_move;
+
 public:
 	Gchart (void);
 	~Gchart (void);
@@ -81,6 +84,8 @@ public:
 	bool removeY1Chart (const int &n);
 	bool removeY2Chart (const int &n);
 	bool reset (const bool confirm = false);
+
+	sigc::signal<void(const float&)> signal_mouse_move (void);
 
 	static void register_type (void);
 

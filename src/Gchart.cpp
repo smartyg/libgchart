@@ -22,6 +22,7 @@
 
 #include "Gchart.hpp"
 
+#include <sigc++/sigc++.h>
 #include <gtkmm.h>
 #include <glibmm.h>
 #include <cairomm/cairomm.h>
@@ -82,6 +83,10 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 
 Gchart::~Gchart (void) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
+}
+
+sigc::signal<void(const float&)> Gchart::signal_mouse_move (void) {
+	return this->_signal_mouse_move;
 }
 
 void Gchart::setLabels (const std::string &x_label, const std::string &x_unit, GchartValuePrint x_print, const std::string &y1_label, const std::string &y1_unit, GchartValuePrint y1_print) {
@@ -181,6 +186,7 @@ void Gchart::onMouseMove (const double &x_coord, const double &y_coord) {
 		if (x != this->x_mouse_pointer) {
 			this->x_mouse_pointer = x;
 			this->queue_draw ();
+			this->_signal_mouse_move.emit(x);
 		}
 	}
 	return;
