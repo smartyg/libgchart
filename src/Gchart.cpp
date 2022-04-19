@@ -205,7 +205,7 @@ bool Gchart::onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state)
 
 #if _ENABLE_GTK == 3
 bool Gchart::onDraw_gtk3 (const Cairo::RefPtr<Cairo::Context>& cr) {
-	this->onDraw (cr, this->get_allocated_width (), this->get_allocated_height ());
+	this->onDraw (cr, 0, 0);
 	return true;
 }
 #endif
@@ -213,14 +213,14 @@ bool Gchart::onDraw_gtk3 (const Cairo::RefPtr<Cairo::Context>& cr) {
 void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 	if (!this->init) return;
+
+	width = this->get_allocated_width ();
+	height = this->get_allocated_height ();
+
 	if (this->update_buffer || this->buffered_width != width || this->buffered_height != height) {
-		//delete this->buffer;
 		Cairo::RefPtr<Cairo::Surface> ref_surface = cr->get_target ();
-		width = this->get_allocated_width ();
-		height = this->get_allocated_height ();
 		this->buffer = Cairo::Surface::create (ref_surface, ref_surface->get_content (), width, height);
 		this->drawBuffer (this->buffer);
-
 		this->update_buffer = false;
 		this->buffered_width = width;
 		this->buffered_height = height;
