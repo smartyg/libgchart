@@ -56,6 +56,7 @@ public:
 	const GchartChart& operator[] (const int &identifier) const;
 	std::forward_list<GchartChart>::const_iterator end (void) const noexcept;
 	std::forward_list<GchartChart>::const_iterator begin (void) const noexcept;
+	std::size_t size (void) const noexcept;
 	void reset (bool confirm = false);
 
 	friend class Gchart;

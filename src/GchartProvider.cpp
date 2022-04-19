@@ -162,6 +162,10 @@ std::forward_list<GchartChart>::const_iterator GchartProvider::begin (void) cons
 	return this->_charts.begin ();
 }
 
+std::size_t GchartProvider::size (void) const noexcept {
+	return std::distance (this->_charts.begin (), this->_charts.end ());
+}
+
 void GchartProvider::reset (bool confirm) {
 	if (confirm) {
 		this->_y_min = NAN;
