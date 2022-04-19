@@ -239,7 +239,7 @@ void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 		if (this->y2)
 			y2_value = (*(this->y2->begin ())).getValue (this->x_mouse_pointer);
 	}
-	this->drawInfo (cr, width, height, this->x_mouse_pointer, y1_value, y2_value);
+	this->drawInfo (cr, width, height, this->x_mouse_pointer);
 	return;
 }
 
@@ -300,7 +300,7 @@ void Gchart::calulateOffsets (const int &width, const int &height) {
 	this->offset_right = extents.width / 2 + extents2.width + this->infobox_width + BORDER_OFFSET;
 }
 
-void Gchart::drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value, const float &y1_info_value, const float &y2_info_value) {
+void Gchart::drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	float h, offset, n;
@@ -311,34 +311,49 @@ void Gchart::drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, co
 	offset = extents.height / 2 + PADDING;
 
 	n = 1.5;
+	double h_min_y1 = PADDING + extents.height + this->y1->size () * (extents.height + 13 + 2 * PADDING);
 
-	if(this->y2)
+	if (this->y2)
 	{
-		h = MAX(height / 3, 3 * PADDING + 2 * extents.height + 13);
+		double h_min_y2 = PADDING + extents.height + this->y2->size () * (extents.height + 13 + 2 * PADDING);
+		h = std::max (static_cast<double>(height) / 3, h_min_y2);
 		n = 2.5;
 
 		/* Y2 info */
-		layer->set_source_rgba(0, 0, 0, 1);
-		Gchart::printText (layer, this->y2->getLabel ()->getLabel (), width - (this->infobox_width / 2), 1.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
-		Gchart::printText2 (layer, y2_info_value, this->y2->getLabel (), width - (this->infobox_width / 2), 1.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
-
-		layer->set_source_rgba (0, 0.6, 0, 1);
-		layer->move_to (width - (this->infobox_width / 4) * 3, 1.5 * h + offset + 7);
-		layer->line_to (width - (this->infobox_width / 4), 1.5 * h + offset + 7);
-		layer->stroke ();
-	}
-	else
-		h = MAX(height / 2, 3 * PADDING + 2 * extents.height + 13);
+		layer->set_source_rgba (0, 0, 0, 1);
+		float h_actual = 1.5 * h - (h_min_y2 / 2);
+		Gchart::printText (layer, this->y2->getLabel ()->getLabel (), width - (this->infobox_width / 2), h_actual, MIDDLE_BOTTOM, PADDING / 2);
+		h_actual += extents.height + PADDING;
+		for (const GchartChart &c : *(this->y2.get ())) {
+			const GchartColor& color = c.getColor ();
+			float y_value = c.getValue (x_info_value);
+			layer->set_source_rgba(0, 0, 0, 1);
+			Gchart::printText2 (layer, y_value, this->y2->getLabel (), width - (this->infobox_width / 2), h_actual, MIDDLE_BOTTOM, PADDING / 2);
+			layer->set_source_rgba (color._red, color._green, color._blue, color._alpha);
+			layer->move_to (width - (this->infobox_width / 4) * 3, h_actual + 7);
+			layer->line_to (width - (this->infobox_width / 4), h_actual + 7);
+			layer->stroke ();
+			h_actual += extents.height + 13 + 2 * PADDING;
+		}
+	} else
+		h = std::max (static_cast<double>(height) / 2, h_min_y1);
 
 	/* Y1 info */
 	layer->set_source_rgba (0, 0, 0, 1);
-	Gchart::printText (layer, this->y1->getLabel ()->getLabel (), width - (this->infobox_width / 2), 0.5 * h - offset, MIDDLE_BOTTOM, PADDING / 2);
-	Gchart::printText2 (layer, y1_info_value, this->y1->getLabel (), width - (this->infobox_width / 2), 0.5 * h + offset, MIDDLE_BOTTOM, PADDING / 2);
-
-	layer->set_source_rgba (1, 0, 0, 1);
-	layer->move_to (width - (this->infobox_width / 4) * 3, 0.5 * h + offset + 7);
-	layer->line_to (width - (this->infobox_width / 4), 0.5 * h + offset + 7);
-	layer->stroke ();
+	float h_actual = 0.5 * h - (h_min_y1 / 2);
+	Gchart::printText (layer, this->y1->getLabel ()->getLabel (), width - (this->infobox_width / 2), h_actual, MIDDLE_BOTTOM, PADDING / 2);
+	h_actual += extents.height + PADDING;
+	for (const GchartChart &c : *(this->y1.get ())) {
+		const GchartColor& color = c.getColor ();
+		float y_value = c.getValue (x_info_value);
+		layer->set_source_rgba(0, 0, 0, 1);
+		Gchart::printText2 (layer, y_value, this->y1->getLabel (), width - (this->infobox_width / 2), h_actual, MIDDLE_BOTTOM, PADDING / 2);
+		layer->set_source_rgba (color._red, color._green, color._blue, color._alpha);
+		layer->move_to (width - (this->infobox_width / 4) * 3, h_actual + 7);
+		layer->line_to (width - (this->infobox_width / 4), h_actual + 7);
+		layer->stroke ();
+		h_actual += extents.height + 13 + 2 * PADDING;
+	}
 
 	/* X info */
 	layer->set_source_rgba (0, 0, 0, 1);

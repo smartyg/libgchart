@@ -112,7 +112,7 @@ protected:
 
 	void onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	void calulateOffsets (const int &width, const int &height);
-	void drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value, const float &y1_info_value, const float &y2_info_value);
+	void drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value) const;
 	void drawBuffer (Cairo::RefPtr<Cairo::Surface> surface);
 	void drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint) const;
 	void drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const;
