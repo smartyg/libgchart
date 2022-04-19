@@ -517,7 +517,7 @@ void Gchart::drawRaster (const Cairo::RefPtr<Cairo::Context>& layer, const int &
 	/* x-axis */
 	layer->line_to (width - this->offset_right, height - this->offset_bottom);
 	/* y2-axis */
-	if(this->y2)
+	if (this->y2)
 		layer->line_to(width - this->offset_right, this->offset_top);
 
 	Gchart::setLineAtributes (layer, 1.0, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
@@ -527,15 +527,13 @@ void Gchart::drawRaster (const Cairo::RefPtr<Cairo::Context>& layer, const int &
 	x_lines = (width - this->offset_left - this->offset_right) / (extents.width * 14);
 	y_lines = (height - this->offset_top - this->offset_bottom) / (extents.height * 4);
 
-	for(int j = 1; j < x_lines; j++)
-	{
+	for (int j = 1; j < x_lines; j++) {
 		double x = j * ((width - this->offset_left - this->offset_right) / x_lines) + this->offset_left;
 		double value = j * ((this->x_max - this->x_min) / x_lines) + this->x_min;
 		verticalSubLine (layer, value, this->label, x, height - this->offset_bottom, this->offset_top);
 	}
 
-	for(int j = 1; j < y_lines; j++)
-	{
+	for(int j = 1; j < y_lines; j++) {
 		double y = height - this->offset_bottom - j * ((height - this->offset_top - this->offset_bottom) / y_lines);
 		double value = j * ((this->y1->_y_max - this->y1->_y_min) / y_lines) + this->y1->_y_min;
 		horizontalSubLine (layer, value, this->y1->getLabel (), this->offset_left, y, width - this->offset_right);
@@ -549,14 +547,12 @@ void Gchart::drawRaster (const Cairo::RefPtr<Cairo::Context>& layer, const int &
 	this->printText2 (layer, this->y1->_y_min, this->y1->getLabel (), this->offset_left, height - this->offset_bottom, RIGHT_MIDDLE, 5);
 	this->printText2 (layer, this->y1->_y_max, this->y1->getLabel (), this->offset_left, this->offset_top, RIGHT_MIDDLE, 5);
 
-	if(this->y2)
-	{
+	if (this->y2) {
 		/* draw the first and last labels on the Y2 axis */
 		this->printText2 (layer, this->y2->_y_min, this->y2->getLabel (), width - this->offset_right, height - this->offset_bottom, LEFT_MIDDLE, 5);
 		this->printText2 (layer, this->y2->_y_max, this->y2->getLabel (), width - this->offset_right, this->offset_top, LEFT_MIDDLE, 5);
 
-		for(int j = 1; j < y_lines; j++)
-		{
+		for(int j = 1; j < y_lines; j++) {
 			double y = height - this->offset_bottom - j * ((height - this->offset_top - this->offset_bottom) / y_lines);
 			double value = j * ((this->y2->_y_max - this->y2->_y_min) / y_lines) + this->y2->_y_min;
 			this->printText2 (layer, value, this->y2->getLabel (), width - this->offset_right, y, LEFT_MIDDLE, 5);
