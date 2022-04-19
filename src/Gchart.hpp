@@ -108,6 +108,8 @@ protected:
 	void onMouseMove (const double &x_coord, const double &y_coord);
 	bool onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state);
 
+	bool inDrawingBox (const double &x, const double &y);
+
 	void onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	void calulateOffsets (const int &width, const int &height);
 	void drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value, const float &y1_info_value, const float &y2_info_value);

@@ -50,7 +50,7 @@ Gchart::Gchart (void) : Glib::ObjectBase ("gchart") {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 	this->init = false;
 	this->update_buffer = false;
-
+	this->x_mouse_pointer = NAN;
 	this->plot_lines = true;
 	this->plot_dots = true;
 
@@ -154,6 +154,7 @@ bool Gchart::onZoom_gtk3 (const GdkEventScroll *e) {
 
 bool Gchart::onZoom (double dx, double dy) {
 	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, dx, dy);
+	if (!std::isfinite (this->x_mouse_pointer)) return true;
 	if (dy == 0) {
 		this->x_center += dx * (this->x_max - this->x_min);
 	} else {
@@ -174,10 +175,13 @@ bool Gchart::onMouseMove_gtk3 (const GdkEventMotion *e) {
 
 void Gchart::onMouseMove (const double &x_coord, const double &y_coord) {
 	g_debug("%s:%d %s (%lf, %lf)", __FILE__, __LINE__, __func__, x_coord, y_coord);
-	float x = this->x_min + ((x_coord - this->offset_left) / this->x_scale);
-	if (x != this->x_mouse_pointer) {
-		this->x_mouse_pointer = x;
-		this->queue_draw ();
+	float x;
+	if (this->inDrawingBox (x_coord, y_coord)) {
+		x = this->x_min + ((x_coord - this->offset_left) / this->x_scale);
+		if (x != this->x_mouse_pointer) {
+			this->x_mouse_pointer = x;
+			this->queue_draw ();
+		}
 	}
 	return;
 }
@@ -188,6 +192,11 @@ bool Gchart::onKeyPressed_gtk3 (const GdkEventButton *e) {
 	return true;
 }
 #endif
+
+bool Gchart::inDrawingBox (const double &x, const double &y) {
+	if (x >= this->offset_left && x <= (this->get_allocated_width () - this->offset_right) && y >= this->offset_top && y <= (this->get_allocated_height () - this->offset_bottom)) return true;
+	else return false;
+}
 
 bool Gchart::onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state) {
 	g_debug("%s:%d %s (%d, %d, %d)", __FILE__, __LINE__, __func__, keyval, keycode, static_cast<int>(state));
