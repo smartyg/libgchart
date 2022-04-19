@@ -21,11 +21,14 @@
 
 #include "config.h"
 
-#include <memory>
-#include <string>
-#include <stdexcept>
+#ifdef HAVE_CXX20
+	#include <format>
+	#define string_format std::format
+#else
+	#include <memory>
+	#include <string>
+	#include <stdexcept>
 
-//TODO: if no c++20 else use std::format
 template<typename ... Args>
 std::string string_format (const std::string& format, Args ... args)
 {
@@ -38,5 +41,6 @@ std::string string_format (const std::string& format, Args ... args)
 	std::snprintf (buf.get(), size, format.c_str(), args ...);
 	return std::string (buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
 }
+#endif
 
 #endif /* __G_CHARTHELPER_HPP__ */
