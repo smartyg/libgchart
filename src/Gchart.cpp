@@ -228,18 +228,14 @@ void Gchart::onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int hei
 	cr->set_source (this->buffer, 0, 0);
 	cr->paint ();
 
-	//draw position line
-	// TODO: draw vertical position line
-	// draw info box
-	float y1_value, y2_value;
-	y1_value = NAN;
-	y2_value = NAN;
 	if (std::isfinite (this->x_mouse_pointer)) {
-		y1_value = (*(this->y1->begin ())).getValue (this->x_mouse_pointer);
-		if (this->y2)
-			y2_value = (*(this->y2->begin ())).getValue (this->x_mouse_pointer);
+		cr->set_source_rgba (0.3, 0.3, 0.3, 0.4);
+		Gchart::setLineAtributes (cr, 1.0, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
+		cr->move_to (this->getXCoord (this->x_mouse_pointer), this->offset_top);
+		cr->line_to (this->getXCoord (this->x_mouse_pointer), height - this->offset_bottom);
+		cr->stroke ();
+		this->drawInfo (cr, width, height, this->x_mouse_pointer);
 	}
-	this->drawInfo (cr, width, height, this->x_mouse_pointer);
 	return;
 }
 
