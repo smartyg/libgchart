@@ -151,17 +151,17 @@ AC_C_INLINE
 AC_FUNC_ERROR_AT_LINE
 
 AS_IF([test "x$gtk_version" = "xgtk3"], [
-PKG_CHECK_MODULES([GTK3], [gtk+-3.0 >= 3.24.0])
-PKG_CHECK_MODULES([GTKMM3], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
-PKG_CHECK_MODULES([GLIBMM3], [glibmm-2.4 > 2.66.0])
-PKG_CHECK_MODULES([CAIROMM3], [cairomm-1.0])
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-3.0 >= 3.24.0 gdkmm-3.0 >= 3.24.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.4 > 2.66.0])
+PKG_CHECK_MODULES([CAIROMM], [cairomm-1.0])
 PKG_CHECK_MODULES([SIGC], [sigc++-2.0])
 ],[])
 AS_IF([test "x$gtk_version" = "xgtk4"], [
-PKG_CHECK_MODULES([GTK4], [gtk4 >= 4.6.0])
-PKG_CHECK_MODULES([GTKMM4], [gtkmm-4.0 >= 4.6.0])
-PKG_CHECK_MODULES([GLIBMM4], [glibmm-2.68])
-PKG_CHECK_MODULES([CAIROMM4], [cairomm-1.16])
+PKG_CHECK_MODULES([GTK], [gtk4 >= 4.6.0])
+PKG_CHECK_MODULES([GTKMM], [gtkmm-4.0 >= 4.6.0])
+PKG_CHECK_MODULES([GLIBMM], [glibmm-2.68])
+PKG_CHECK_MODULES([CAIROMM], [cairomm-1.16])
 PKG_CHECK_MODULES([SIGC], [sigc++-3.0])
 ])
 
