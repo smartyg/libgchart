@@ -193,7 +193,7 @@ bool Gchart::onKeyPressed_gtk3 (const GdkEventButton *e) {
 }
 #endif
 
-bool Gchart::inDrawingBox (const double &x, const double &y) {
+bool Gchart::inDrawingBox (const double &x, const double &y) const {
 	if (x >= this->offset_left && x <= (this->get_allocated_width () - this->offset_right) && y >= this->offset_top && y <= (this->get_allocated_height () - this->offset_bottom)) return true;
 	else return false;
 }
@@ -296,7 +296,7 @@ void Gchart::calulateOffsets (const int &width, const int &height) {
 	this->offset_right = extents.width / 2 + extents2.width + this->infobox_width + BORDER_OFFSET;
 }
 
-void Gchart::drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value) const {
+void Gchart::drawInfo (const Cairo::RefPtr<Cairo::Context>& layer, const int &width, const int &height, const float &x_info_value) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	float h, offset, n;
@@ -388,7 +388,7 @@ void Gchart::drawBuffer (Cairo::RefPtr<Cairo::Surface> surface) {
 	}
 }
 
-void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint = NAN) const {
+void Gchart::drawChart (const Cairo::RefPtr<Cairo::Context>& layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint = NAN) const {
 	g_debug("%s:%d %s (-, -, %d, %f)", __FILE__, __LINE__, __func__, height, x_hint);
 
 	for (const GchartChart &c : *(y.get ())) {
@@ -416,7 +416,7 @@ void Gchart::drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_p
 	}
 }
 
-void Gchart::drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const {
+void Gchart::drawPoint (const Cairo::RefPtr<Cairo::Context>& layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const {
 	g_debug("%s:%d %s (%f, %f)", __FILE__, __LINE__, __func__, point->getX (), point->getY ());
 
 	double x_coord = this->getXCoord (point->getX ());
@@ -491,7 +491,7 @@ void Gchart::calculateMinMaxValues (const int &width, const int &height) {
 	return;
 }
 
-void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, int &x_lines) {
+void Gchart::drawRaster (const Cairo::RefPtr<Cairo::Context>& layer, const int &width, const int &height, int &x_lines) const {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	Cairo::TextExtents extents;
@@ -513,7 +513,7 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	if(this->y2)
 		layer->line_to(width - this->offset_right, this->offset_top);
 
-	Gchart::setLineAtributes (layer, 1, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
+	Gchart::setLineAtributes (layer, 1.0, CAIRO_ENUM_NS_CONTEXT::LineJoin::LINEJOIN_MITER, CAIRO_ENUM_NS_CONTEXT::LineCap::LINECAP_BUTT);
 	layer->stroke ();
 
 	layer->get_text_extents ("0", extents);
@@ -560,7 +560,7 @@ void Gchart::drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, 
 	layer->fill ();
 }
 
-void Gchart::setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap) {
+void Gchart::setLineAtributes (const Cairo::RefPtr<Cairo::Context>& layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	layer->set_line_width (width);
@@ -568,7 +568,7 @@ void Gchart::setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double
 	layer->set_line_cap (line_cap);
 }
 
-void Gchart::drawSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &x1, const double &y1, const double &x2, const double &y2) {
+void Gchart::drawSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &x1, const double &y1, const double &x2, const double &y2) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	std::vector<double> dashes = {6.0};
@@ -579,7 +579,7 @@ void Gchart::drawSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &x1,
 	layer->line_to(x2, y2);
 }
 
-void Gchart::verticalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &y2) {
+void Gchart::verticalSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &y2) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	layer->set_source_rgba (0, 0, 0, 1);
@@ -589,7 +589,7 @@ void Gchart::verticalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double 
 	layer->fill ();
 }
 
-void Gchart::horizontalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &x2) {
+void Gchart::horizontalSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &x2) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	layer->set_source_rgba (0, 0, 0, 1);
@@ -599,11 +599,11 @@ void Gchart::horizontalSubLine (Cairo::RefPtr<Cairo::Context> layer, const doubl
 	layer->fill ();
 }
 
-void Gchart::printText2 (Cairo::RefPtr<Cairo::Context> layer, const float &value, const std::shared_ptr<GchartLabel> &label, const float &x, const float &y, const AllignMode &m, const float &padding) {
+void Gchart::printText2 (const Cairo::RefPtr<Cairo::Context>& layer, const float &value, const std::shared_ptr<GchartLabel> &label, const float &x, const float &y, const AllignMode &m, const float &padding) {
 	Gchart::printText (layer, label->getValueUnitText (value), x, y, m, padding);
 }
 
-void Gchart::printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &text, const float &x, const float &y, const AllignMode &m, const float &padding) {
+void Gchart::printText (const Cairo::RefPtr<Cairo::Context>& layer, const std::string &text, const float &x, const float &y, const AllignMode &m, const float &padding) {
 	g_debug("%s:%d %s ()", __FILE__, __LINE__, __func__);
 
 	float x_new, y_new;

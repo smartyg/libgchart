@@ -108,26 +108,26 @@ protected:
 	void onMouseMove (const double &x_coord, const double &y_coord);
 	bool onKeyPressed (guint keyval, guint keycode, Gdk::ModifierType state);
 
-	bool inDrawingBox (const double &x, const double &y);
+	bool inDrawingBox (const double &x, const double &y) const;
 
 	void onDraw (const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 	void calulateOffsets (const int &width, const int &height);
-	void drawInfo (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, const float &x_info_value) const;
+	void drawInfo (const Cairo::RefPtr<Cairo::Context>& layer, const int &width, const int &height, const float &x_info_value) const;
 	void drawBuffer (Cairo::RefPtr<Cairo::Surface> surface);
-	void drawChart (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint) const;
-	void drawPoint (Cairo::RefPtr<Cairo::Context> layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const;
+	void drawChart (const Cairo::RefPtr<Cairo::Context>& layer, const std::shared_ptr<GchartProvider> &y, const int &height, const float &x_hint) const;
+	void drawPoint (const Cairo::RefPtr<Cairo::Context>& layer, const std::shared_ptr<GchartProvider> &y, const std::shared_ptr<GchartPoint> &point, const int &height) const;
 
 	double getXCoord (const float &x) const;
 	double getYCoord (const float &y, const std::shared_ptr<GchartProvider> &y_provider) const;
 	void calculateMinMaxValues (const int &width, const int &height);
-	void drawRaster (Cairo::RefPtr<Cairo::Context> layer, const int &width, const int &height, int &x_lines);
+	void drawRaster (const Cairo::RefPtr<Cairo::Context>& layer, const int &width, const int &height, int &x_lines) const;
 
-	static void setLineAtributes (Cairo::RefPtr<Cairo::Context> layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap);
-	static void drawSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &x1, const double &y1, const double &x2, const double &y2);
-	static void verticalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &y2);
-	static void horizontalSubLine (Cairo::RefPtr<Cairo::Context> layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &x2);
-	static void printText2 (Cairo::RefPtr<Cairo::Context> layer, const float &value, const std::shared_ptr<GchartLabel> &label, const float &x, const float &y, const Gchart::AllignMode &m, const float &padding);
-	static void printText (Cairo::RefPtr<Cairo::Context> layer, const std::string &text, const float &x, const float &y, const Gchart::AllignMode &m, const float &padding);
+	static void setLineAtributes (const Cairo::RefPtr<Cairo::Context>& layer, const double &width, const CAIRO_ENUM_NS_CONTEXT::LineJoin &line_join, const CAIRO_ENUM_NS_CONTEXT::LineCap &line_cap);
+	static void drawSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &x1, const double &y1, const double &x2, const double &y2);
+	static void verticalSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &y2);
+	static void horizontalSubLine (const Cairo::RefPtr<Cairo::Context>& layer, const double &value, const std::shared_ptr<GchartLabel> &label, const double &x1, const double &y1, const double &x2);
+	static void printText2 (const Cairo::RefPtr<Cairo::Context>& layer, const float &value, const std::shared_ptr<GchartLabel> &label, const float &x, const float &y, const Gchart::AllignMode &m, const float &padding);
+	static void printText (const Cairo::RefPtr<Cairo::Context>& layer, const std::string &text, const float &x, const float &y, const Gchart::AllignMode &m, const float &padding);
 };
 
 #endif /* __GCHART_HPP__ */
