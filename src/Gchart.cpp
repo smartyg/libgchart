@@ -23,9 +23,8 @@
 #include "Gchart.hpp"
 
 #include <algorithm>
-#include <sigc++/sigc++.h>
-#include <gtkmm.h>
 #include <glibmm.h>
+#include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
 #include "GchartProvider.hpp"

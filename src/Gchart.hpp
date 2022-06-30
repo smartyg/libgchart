@@ -21,7 +21,6 @@
 
 #include <memory>
 #include <string>
-#include <sigc++/sigc++.h>
 #include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
