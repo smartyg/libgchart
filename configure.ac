@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(libgchart, 0.1.0, goedhart.martijn@gmail.com)
+AC_INIT(libgchart, 0.1.99, goedhart.martijn@gmail.com)
 AC_CONFIG_SRCDIR([src/Gchart.cpp])
 AC_CONFIG_HEADERS([config.h])
 
