@@ -7,6 +7,6 @@ Name: @PACKAGE_NAME@
 Description: @PROGRAM_SUMMARY@
 Version: @PACKAGE_VERSION@
 URL: @PACKAGE_HOMEPAGE@
-Requires.private: gobject-2.0 gtk+-3.0
+Requires: gtkmm-4.0 >= 4.6
 Libs: -L${libdir} -l@PROGRAM_NAME@
-Cflags: -I${includedir}/@PROGRAM_NAME@
+Cflags: -I${includedir}/@PROGRAM_NAME@ -D_ENABLE_GTK=4
