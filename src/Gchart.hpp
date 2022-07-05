@@ -19,8 +19,6 @@
 #ifndef __GCHART_HPP__
 #define __GCHART_HPP__
 
-#include <memory>
-#include <string>
 #include <gtkmm.h>
 #include <cairomm/cairomm.h>
 
