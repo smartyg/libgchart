@@ -217,7 +217,7 @@ then
 	git_version=$VERSION
 	if test -n "$GIT"
 	then
-		git_version=$($GIT describe --tags --match='v@<:@0-9@:>@*' --dirty=modified | $SED -E -e 's/^v(@<:@0-9@:>@@<:@.0-9@:>@*)(-(@<:@0-9@:>@+)-(@<:@0-9a-g@:>@+)(-(modified))?)?/\1+git\3.\4.\6/' -e 's/@<:@.@:>@{2,}/./' -e 's/(\+git)?@<:@.@:>@$//')
+		git_version=$($GIT describe --tags --match='@<:@0-9@:>@*' --dirty=-modified | $SED -E -e 's/^(@<:@0-9@:>@+(@<:@.@:>@@<:@0-9@:>@+){1,2})(-(@<:@0-9@:>@+)-(@<:@0-9a-g@:>@+))?(-(modified))?$/\1+git\4.\5.\7/' -e 's/@<:@.@:>@{2,}/./' -e 's/(\+git)?@<:@.@:>@$//')
 		if test $? -ne 0
 		then
 			git_version=$VERSION
