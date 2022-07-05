@@ -29,7 +29,7 @@ chart_gtk3_CPPFLAGS =          \
 chart_gtk3_LDADD =       \
     $(CHART_GTK3_LIBS)   \
     $(GTHREAD_LIBS) \
-    $(top_builddir)/src/libgchart-gtk3-@LIBRARY_API_VERSION@.la
+    $(top_builddir)/src/libgchart-gtk3.la
 
 chart_gtk4_CPPFLAGS =          \
     -I$(top_srcdir)/src   \
@@ -42,7 +42,7 @@ chart_gtk4_CPPFLAGS =          \
 chart_gtk4_LDADD =       \
     $(CHART_GTK4_LIBS)   \
     $(GTHREAD_LIBS) \
-    $(top_builddir)/src/libgchart-gtk4-@LIBRARY_API_VERSION@.la
+    $(top_builddir)/src/libgchart-gtk4.la
 
 ## Misc
 #EXTRA_DIST = poi.png mapviewer.ui mapviewer.js README

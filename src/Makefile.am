@@ -23,13 +23,13 @@ GCHART_GTK4_CPPFLAGS = @GTK_CFLAGS@ @GLIBMM_CFLAGS@ @CAIROMM_CFLAGS@ @GTKMM_CFLA
 GCHART_GTK4_LIBS = @M_LIBS@ @GTK_LIBS@ @GLIBMM_LIBS@ @CAIROMM_LIBS@ @GTKMM_LIBS@ @SIGC_LIBS@
 
 if ENABLE_GTK3
-lib_LTLIBRARIES += libgchart-gtk3-@LIBRARY_API_VERSION@.la
+lib_LTLIBRARIES += libgchart-gtk3.la
 if ENABLE_GLADE
 gladedir = ${libdir}/glade/modules
 glade_LTLIBRARIES = libgladegchart.la
 libgladegchart_la_CPPFLAGS = @GTK_CFLAGS@ @GTKMM_CFLAGS@
 libgladegchart_la_LDFLAGS = -avoid-version
-libgladegchart_la_LIBADD = libgchart-gtk3-@LIBRARY_API_VERSION@.la @GLIBMM_LIBS@
+libgladegchart_la_LIBADD = libgchart-gtk3.la @GLIBMM_LIBS@
 libgladegchart_la_SOURCES = \
 	gchart_glade.h      \
 	gchart_glade.cpp
@@ -37,42 +37,42 @@ endif
 endif
 
 if ENABLE_GTK4
-lib_LTLIBRARIES += libgchart-gtk4-@LIBRARY_API_VERSION@.la
+lib_LTLIBRARIES += libgchart-gtk4.la
 endif
 
 ## Shared library
-libgchart_gtk3_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
+libgchart_gtk3_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \
     $(WARN_CPPFLAGS)        \
     $(DISABLE_DEPRECATED)   \
     $(GCHART_GTK3_CPPFLAGS) \
     -DG_LOG_DOMAIN=\"Gchart\"
 
-libgchart_gtk3_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
+libgchart_gtk3_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
 
-libgchart_gtk3_@LIBRARY_API_VERSION@_la_LIBADD = \
+libgchart_gtk3_la_LIBADD = \
     $(GCHART_GTK3_LIBS) \
     -lm
 
-libgchart_gtk3_@LIBRARY_API_VERSION@_la_SOURCES = \
+libgchart_gtk3_la_SOURCES = \
 	$(sources_public_h)  \
 	$(sources_private_h) \
 	$(sources_c)
 
-libgchart_gtk4_@LIBRARY_API_VERSION@_la_CPPFLAGS = \
+libgchart_gtk4_la_CPPFLAGS = \
     $(AM_CPPFLAGS)          \
     $(WARN_CPPFLAGS)        \
     $(DISABLE_DEPRECATED)   \
     $(GCHART_GTK4_CPPFLAGS) \
     -DG_LOG_DOMAIN=\"Gchart\"
 
-libgchart_gtk4_@LIBRARY_API_VERSION@_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
+libgchart_gtk4_la_LDFLAGS = -version-info @LIBRARY_CURRENT_VERSION@:@LIBRARY_REVISION_VERSION@:@LIBRARY_AGE_VERSION@
 
-libgchart_gtk4_@LIBRARY_API_VERSION@_la_LIBADD = \
+libgchart_gtk4_la_LIBADD = \
     $(GCHART_GTK4_LIBS) \
     -lm
 
-libgchart_gtk4_@LIBRARY_API_VERSION@_la_SOURCES = \
+libgchart_gtk4_la_SOURCES = \
 	$(sources_public_h)  \
 	$(sources_private_h) \
 	$(sources_c)
@@ -92,13 +92,13 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=$(builddir)
 if HAVE_INTROSPECTION
 introspection_sources = $(sources_c) $(sources_public_h)
 
-Gchart_@LIBRARY_API_VERSION@.gir: libgchart-@LIBRARY_API_VERSION@.la
-Gchart_@LIBRARY_API_VERSION@_gir_INCLUDES = GObject-2.0 Gtk-3.0
-Gchart_@LIBRARY_API_VERSION@_gir_CFLAGS = $(GCHART_CFLAGS) -I$(srcdir) -I$(builddir)
-Gchart_@LIBRARY_API_VERSION@_gir_LIBS = libgchart-@LIBRARY_API_VERSION@.la
-Gchart_@LIBRARY_API_VERSION@_gir_FILES = $(introspection_sources)
-Gchart_@LIBRARY_API_VERSION@_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "gchart.hpp"
-INTROSPECTION_GIRS += Gchart-@LIBRARY_API_VERSION@.gir
+Gchart.gir: libgchart.la
+Gchart_gir_INCLUDES = GObject-2.0 Gtk-3.0
+Gchart_gir_CFLAGS = $(GCHART_CFLAGS) -I$(srcdir) -I$(builddir)
+Gchart_gir_LIBS = libgchart.la
+Gchart_gir_FILES = $(introspection_sources)
+Gchart_gir_SCANNERFLAGS = --identifier-prefix=Gchart --c-include "gchart.hpp"
+INTROSPECTION_GIRS += Gchart.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)

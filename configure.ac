@@ -38,7 +38,6 @@ AX_DEFINE_SUBST([PACKAGE_HOMEPAGE], [http://www.martijn-goedhart.nl/libgchart/],
 AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [1], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
-AX_DEFINE_SUBST([LIBRARY_API_VERSION], [0], [version of this library])
 
 # Check which option are enabled and disabled
 # Let user decide which GTK(mm) version to compile for (gtk3 or gtk4)
