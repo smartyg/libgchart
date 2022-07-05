@@ -77,7 +77,7 @@ libgchart_gtk4_la_SOURCES = \
 	$(sources_private_h) \
 	$(sources_c)
 
-libgchart_includedir = $(includedir)/gchart-0.1
+libgchart_includedir = $(includedir)/gchart
 nobase_libgchart_include_HEADERS = $(sources_public_h)
 
 ## Misc

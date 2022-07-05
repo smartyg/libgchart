@@ -48,7 +48,7 @@ endif
 
 noinst_HEADERS = config.h
 
-EXTRA_DIST = VERSION @PROGRAM_NAME@.spec
+EXTRA_DIST = VERSION @PROGRAM_NAME@.spec @PROGRAM_NAME@-gtk3.spec @PROGRAM_NAME@-gtk4.spec
 
 doc_DATA =        \
 	README    \
@@ -69,7 +69,7 @@ VERSION:
 	-$(GIT) describe --tags --match=v[0-9]* --long --dirty | $(SED) 's/^v//' > VERSION
 
 distclean-local:
-	@rm -f ChangeLog VERSION
+	@rm -f ChangeLog VERSION @PROGRAM_NAME@-gtk3.spec.in @PROGRAM_NAME@-gtk4.spec.in
 endif
 
 SUBDIRS = src examples docs

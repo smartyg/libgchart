@@ -212,6 +212,8 @@ fi
 if test -f gchart.spec.in
 then
 	AC_CONFIG_FILES([gchart.spec])
+	AC_CONFIG_FILES([gchart-gtk3.spec:gchart.spec.in], [sed -i 's/%{nil}/gtk3/' gchart-gtk3.spec])
+	AC_CONFIG_FILES([gchart-gtk4.spec:gchart.spec.in], [sed -i 's/%{nil}/gtk4/' gchart-gtk4.spec])
 	git_version=$VERSION
 	if test -n "$GIT"
 	then

@@ -12,9 +12,12 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
+%global _lto_cflags %{?_lto_cflags} -ffat-lto-objects
+
 %define libName @PACKAGE_NAME@
 %define srcVersion @VERSION@
 %define majorVersion @LIBRARY_OLD_INTERFACE@
+%define flavor %{nil}
 
 Name:           @PROGRAM_NAME@
 Version:        @GIT_VERSION@
@@ -24,118 +27,123 @@ Summary:        @PROGRAM_SUMMARY@
 Url:            @PACKAGE_HOMEPAGE@
 Group:          System/Libraries
 Source:         @PACKAGE_NAME@-@VERSION@.tar.xz
+%if "%{flavor}" == "gtk4"
+BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig
-BuildRequires:  pkgconfig(glib-2.0) >= 2.32
-BuildRequires:  pkgconfig(gobject-2.0) >= 2.38
-BuildRequires:  pkgconfig(gtk+-3.0)
-BuildRequires:  doxygen
-BuildRequires:  graphviz
+BuildRequires:  pkgconfig(gtkmm-4.0) >= 4.6
+%else
+BuildRequires:  gcc-c++
+BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(gtkmm-3.0) >= 3.24
+%endif
 BuildRequires:  fdupes
 BuildRoot:      %{_tmppath}/%{name}-%{srcVersion}-build
 
 %description
 @PROGRAM_DESCRIPTION@
 
-
-%package -n %{libName}%{majorVersion}
-Summary:        @PROGRAM_SUMMARY@
-Group:          System/Libraries
-
-%description -n %{libName}%{majorVersion}
-@PROGRAM_DESCRIPTION@
-
-
+%if "0%{flavor}" == "0"
 %package devel
-Summary:        Development files for @PACKAGE_NAME@
+Summary:        Development files for libgchart
 Group:          Development/Sources
-Requires:       %{libName}%{majorVersion} = %{version}
-Requires:       glibc-devel
-Requires:       glib2-devel
-Requires:       pkgconfig
-Requires:       pkgconfig(glib-2.0) >= 2.32
-Requires:       pkgconfig(gobject-2.0) >= 2.38
-Requires:       pkgconfig(gtk+-3.0)
+Requires:       %{libName}-devel
+Provides:       %{name}-devel = %{version}
 
 %description devel
 Development files for @PACKAGE_NAME@.
 @PROGRAM_DESCRIPTION@
 
+%else
+%package -n %{libName}-%{flavor}-%{majorVersion}
+Summary:        @PROGRAM_SUMMARY@
+Group:          System/Libraries
 
-%package devel-static
-Summary:        Development files for @PACKAGE_NAME@
+%description -n %{libName}-%{flavor}-%{majorVersion}
+@PROGRAM_DESCRIPTION@
+
+%package %{flavor}-devel
+Summary:        Development files for libgchart
 Group:          Development/Sources
-Provides:       %{name}-devel:%{_libdir}/%{libName}.a
+Requires:       %{libName}-%{flavor}-%{majorVersion} = %{version}
 Requires:       %{name}-devel = %{version}
+Provides:       %{libName}-devel = %{flavor}
 
-%description devel-static
+%description %{flavor}-devel
 Development files for @PACKAGE_NAME@.
 @PROGRAM_DESCRIPTION@
 
 
-%package docs
-Summary:	Documentation for @PACKAGE_NAME@
-Group:		Documentation/Other
-Requires:	%{libName}%{majorVersion} = %{version}
+%package %{flavor}-devel-static
+Summary:        Development files for libgchart
+Group:          Development/Sources
+Provides:       %{name}-%{flavor}-devel:%{_libdir}/%{libName}-%{flavor}-%{majorVersion}.a
+Requires:       %{name}-%{flavor}-devel = %{version}
 
-%description docs
-Documentation for @PACKAGE_NAME@.
+%description %{flavor}-devel-static
+Development files for @PACKAGE_NAME@.
 @PROGRAM_DESCRIPTION@
 
-
-%package lang
-Summary:	Language files @PACKAGE_NAME@
-Group:		System/Localization
-Requires:	%{libName}%{majorVersion} = %{version}
-
-%description lang
-Language file for @PACKAGE_NAME@.
-@PROGRAM_DESCRIPTION@
-
+%endif
 
 %prep
 %setup -q -n %{libName}-%{srcVersion}
 
 %build
-%configure --enable-docs
+%if "0%{flavor}" == "0"
+%configure --disable-docs --enable-introspection=no --disable-debug --enable-gtk-version=gtk3
+%else
+%configure --disable-docs --enable-introspection=no --disable-debug --enable-gtk-version=%{flavor}
+%endif
 make %{?_smp_mflags}
 
 %install
 %make_install
-mkdir %{buildroot}/usr/share/help
-%find_lang %{libName}
-%fdupes docs/html
 
-%post -n %{libName}%{majorVersion}
+%if "0%{flavor}" == "0"
+%else
+%post -n %{libName}-%{flavor}-%{majorVersion}
 /sbin/ldconfig
 
-%postun -n %{libName}%{majorVersion}
+%postun -n %{libName}-%{flavor}-%{majorVersion}
 /sbin/ldconfig
+%endif
 
-
-%files -n %{libName}%{majorVersion}
-%defattr(-,root,root)
-%{_libdir}/%{libName}.so.*
-
+%if "0%{flavor}" == "0"
 %files devel
 %defattr(-,root,root)
-%doc ChangeLog README COPYING AUTHORS
-/usr/include/%{name}/
-%_libdir/%{libName}.la
-%_libdir/%{libName}.so
-%{_libdir}/pkgconfig/%{libName}.pc
-%doc %_mandir/man3/*
+%doc ChangeLog README AUTHORS
+%license COPYING
+%{_includedir}/%{name}/
+%exclude %_libdir/%{libName}-gtk3.a
+%exclude %_libdir/%{libName}-gtk3.la
+%exclude %_libdir/%{libName}-gtk3.so*
+%exclude %{_libdir}/pkgconfig/%{libName}-gtk3.pc
+%exclude %{_datarootdir}/doc/%{libName}/ChangeLog
+%exclude %{_datarootdir}/doc/%{libName}/README
+%exclude %{_datarootdir}/doc/%{libName}/AUTHORS
+%exclude %{_datarootdir}/doc/%{libName}/COPYING
 
-%files devel-static
+%else
+%files -n %{libName}-%{flavor}-%{majorVersion}
 %defattr(-,root,root)
-%_libdir/%{libName}.a
+%{_libdir}/%{libName}-%{flavor}.so.*
 
-%files lang -f %{libName}.lang
+%files %{flavor}-devel
 %defattr(-,root,root)
-%doc ChangeLog README COPYING AUTHORS
+%doc ChangeLog README AUTHORS
+%license COPYING
+%exclude %{_includedir}/%{name}/
+%_libdir/%{libName}-%{flavor}.la
+%_libdir/%{libName}-%{flavor}.so
+%{_libdir}/pkgconfig/%{libName}-%{flavor}.pc
+%exclude %{_datarootdir}/doc/%{libName}/ChangeLog
+%exclude %{_datarootdir}/doc/%{libName}/README
+%exclude %{_datarootdir}/doc/%{libName}/AUTHORS
+%exclude %{_datarootdir}/doc/%{libName}/COPYING
 
-%files docs
+%files %{flavor}-devel-static
 %defattr(-,root,root)
-%doc ChangeLog README COPYING AUTHORS
-%doc docs/html
+%_libdir/%{libName}-%{flavor}.a
+%endif
 
 %changelog
