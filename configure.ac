@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(libgchart, 0.1.99, goedhart.martijn@gmail.com)
+AC_INIT(libgchart, 0.2.0, goedhart.martijn@gmail.com)
 AC_CONFIG_SRCDIR([src/Gchart.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -25,19 +25,19 @@ AC_DEFUN([AX_CHECK_LIB], [
 
 # some other package constants
 AX_DEFINE_SUBST([PROGRAM_NAME], [gchart], [program name])
-AX_DEFINE_SUBST([PROGRAM_SUMMARY], [Library provides a simple chart widget for GTK+ 3.x], [program summary])
-AX_DEFINE_SUBST([PROGRAM_DESCRIPTION], [], [program description])
-AX_DEFINE_SUBST([LAST_CHANGE], [03-01-2015], [Date of last change])
+AX_DEFINE_SUBST([PROGRAM_SUMMARY], [Library provides a simple chart widget for gtkmm3 and gtkmm4], [program summary])
+AX_DEFINE_SUBST([PROGRAM_DESCRIPTION], [Library providing a gtkmm widget extending Gtk::DrawingArea to plot a chart with possibility to plot 2 axis.], [program description])
+AX_DEFINE_SUBST([LAST_CHANGE], [05-07-2022], [Date of last change])
 AX_DEFINE_SUBST([AUTHOR], [Martijn Goedhart], [Author])
-AX_DEFINE_SUBST([COPYRIGHT], [(c) 2014-2015 Martijn Goedhart], [Copyright])
+AX_DEFINE_SUBST([COPYRIGHT], [(c) 2014-2022 Martijn Goedhart], [Copyright])
 AX_DEFINE_SUBST([LICENSE], [GNU General Public License], [License name])
 AX_DEFINE_SUBST([LICENSE_SHORT], [GPLv2+], [License shorthand])
 AX_DEFINE_SUBST([LICENSE_SHORT_RPM], [GPL-2.0+], [SPDX License code])
 AX_DEFINE_SUBST([LICENSE_LONG], [GNU GPL version 2 or later <http://www.gnu.org/licenses/gpl-2.0.html>], [Long license description])
 AX_DEFINE_SUBST([PACKAGE_HOMEPAGE], [http://www.martijn-goedhart.nl/libgchart/], [package home page])
-AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [1], [version of this library])
+AX_DEFINE_SUBST([LIBRARY_CURRENT_VERSION], [2], [version of this library])
 AX_DEFINE_SUBST([LIBRARY_REVISION_VERSION], [0], [version of this library])
-AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [1], [version of this library])
+AX_DEFINE_SUBST([LIBRARY_AGE_VERSION], [0], [version of this library])
 
 # Check which option are enabled and disabled
 # Let user decide which GTK(mm) version to compile for (gtk3 or gtk4)
