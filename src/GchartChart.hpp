@@ -27,19 +27,20 @@
 #include "GchartPoint.hpp"
 #include "helper.hpp"
 
-typedef float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::const_iterator &it);
+typedef float (*GchartFilter) (const std::shared_ptr<void> &chart, float &x, GchartMap::const_iterator &it);
 
 class GchartChart {
 private:
 	const int _identifier;
 	const GchartColor _color;
-	const GchartMap _map;
-	GchartGetValue _get_value;
+	const std::shared_ptr<void> _map;
+	GchartFilter _filter;
 	void *_user_data;
 
 
 public:
 	enum Type {
+                NONE = 0,
 		LINEAR = 1,
 		CURVE_2,
 		CURVE_3,
@@ -49,9 +50,11 @@ public:
 	};
 
 	// For linear inerpolation
-	GchartChart (const int identifier, const GchartColor &color, const GchartMap map);
+        template<Itteratable T>
+	GchartChart (const int identifier, const GchartColor &color, const std::shared_ptr<T> map) : GChartChart(NONE, identifier, color, map) { }
 	// for curved chart
-	GchartChart (const GchartChart::Type &t, const int identifier, const GchartColor &color, const GchartMap map, GchartGetValue cb = nullptr, void *user_data = nullptr);
+        template<Itteratable T>
+	GchartChart (const GchartChart::Type &t, const int identifier, const GchartColor &color, const std::shared_ptr<T> map, std::function<bool(const std::shared_ptr<const T> &chart, float &x, T::const_iterator &it)> filter = nullptr, void *user_data = nullptr);
 	~GchartChart (void);
 
 	const float& operator[] (std::size_t idx) const;
