@@ -28,20 +28,19 @@
 
 #define IS_FLAG_SET(flags, f) (((flags) & (f)) == (f))
 
-typedef std::map<const float, const float> GchartMap;
+//typedef std::map<const float, const float> GchartMap;
 
-class GchartPoint {
+class GchartPointBase {
 private:
 	const float _x;
 	const float _y;
-	const int _flags;
-	GchartMap::const_iterator _it;
+	//const int _flags;
+	//GchartMap::const_iterator _it;
 
 public:
-	GchartPoint (const float x, const float y, GchartMap::const_iterator it) : _x(x), _y(y), _flags(0), _it(it) {};
-	GchartPoint (const float x, const float y, const int flags, GchartMap::const_iterator it) : _x(x), _y(y), _flags(flags), _it(it) {};
+	GchartPoint (const float x, const float y) : _x(x), _y(y {};
 	~GchartPoint (void) {}
-
+/*
 	const float& getX (void) const {
 		return this->_x;
 	}
@@ -57,6 +56,13 @@ public:
 	GchartMap::const_iterator getIterator (void) const {
 		return this->_it;
 	}
+*/
+};
+
+Template<Iterator I>
+class GchartPoint : public GchartPointBase {
+I _it;
+
 };
 
 #endif /* __GCHART_POINT_HPP__ */
