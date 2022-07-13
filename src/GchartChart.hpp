@@ -27,19 +27,24 @@
 #include "GchartPoint.hpp"
 #include "helper.hpp"
 
-typedef float (*GchartGetValue) (const GchartMap &chart, float &x, GchartMap::const_iterator &it);
+typedef const std::shared_ptr<GchartPoint<T::const_iterator>> (*GchartFilter) (const std::shared_ptr<T> &chart, float &x, GchartMap::const_iterator &it);
+Typedef float (*GchartInterpolator) (const std::shared_ptr<GchartPoint>&, const std::shared_ptr<GchartPoint>&, const float&);
 
-class GchartChart {
-private:
-	const int _identifier;
-	const GchartColor _color;
-	const GchartMap _map;
-	GchartGetValue _get_value;
-	void *_user_data;
-
-
-public:
-	enum Type {
+Class GchartChartBase {
+Private:
+Const std::shared_ptr<void> _ptr;
+const int _identifier;
+	const GColor _color;
+        const GchartInterpolator _interpolate;
+Protected:
+GchartChartBase (const std::shared_ptr<void> ptr, std::type_index type) : _ptr(ptr), _type(type) { }
+virtual ~GchartChartBase (void) = 0;
+const std::shared_ptr<void> getPtr (void) const {
+Return this->_ptr;
+}
+Public:
+enum Type {
+                NONE = 0,
 		LINEAR = 1,
 		CURVE_2,
 		CURVE_3,
@@ -47,34 +52,90 @@ public:
 		CURVE_5,
 		CUSTOM
 	};
+int getIdentifier (void) const;
+const GchartColor getColor (void) const;
+size_t size (void) const noexcept;
 
-	// For linear inerpolation
-	GchartChart (const int identifier, const GchartColor &color, const GchartMap map);
-	// for curved chart
-	GchartChart (const GchartChart::Type &t, const int identifier, const GchartColor &color, const GchartMap map, GchartGetValue cb = nullptr, void *user_data = nullptr);
-	~GchartChart (void);
-
-	const float& operator[] (std::size_t idx) const;
-	float getValue (const float &x) const;
-
-private:
-	float getValue (float &x, GchartMap::const_iterator &it) const;
-
-public:
-	const std::shared_ptr<GchartPoint> getPoint (const float &x) const;
-	const int& getIdentifier (void) const;
-	const std::shared_ptr<GchartPoint> getNextPoint (const std::shared_ptr<GchartPoint> &prev, const float &x_hint) const;
-	size_t size (void) const noexcept;
-	const GchartMap::const_iterator end (void) const noexcept;
-	const GchartMap::const_iterator begin (void) const noexcept;
-	const GchartMap::const_iterator last (void) const;
-	const GchartColor& getColor (void) const;
-
-	static float linear (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+static float linear (const GchartMap &map, float &x, GchartMap::const_iterator &it);
 	static float curved2 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
 	static float curved3 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
 	static float curved4 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
 	static float curved5 (const GchartMap &map, float &x, GchartMap::const_iterator &it);
+
+
+virtual const std::shared_ptr<GchartPoint> getPoint (const float&) const = 0;
+vitrual const std::shared_ptr<GchartPoint> getNextPoint (const std::shared_ptr<GchartPoint>&, const float&) const = 0;
+}
+
+Template<Iteratable T>
+class GchartChart : public GchartChartBase {
+private:
+	const GchartFilter _filter;
+
+public:
+	
+
+        // disable copy and move constructor and assignment
+        GchartChart (void) = delete;
+
+	// For none inerpolation
+        GchartChart (const int identifier, const GchartColor &color, const std::shared_ptr<T> map, std::function<const std::shared_ptr<GchartPoint>(const std::shared_ptr<T>&, const T::const_iterator&)> filter) : GChartChart(NONE, identifier, color, map) { }
+	// for curved chart
+	GchartChart (const GchartChart::Type &t, const int identifier, const GchartColor &color, const std::shared_ptr<T> data, const GchartFilter filter) : _identifier(identifier), _color(color) {
+GchartMap<T> map = new GchartMap<T>(data, use_filter);
+This->_map = static_cast<GchartMapBase>(map);
+// assign interpolator
+}
+	~GchartChart (void);
+
+	//const float& operator[] (std::size_t idx) const;
+	//float getValue (const float &x) const;
+
+//private:
+	//float getValue (float &x, GchartMap::const_iterator &it) const;
+
+public:
+        const std::shared_ptr<T> getData (void) {
+Const std::shared_ptr<T> map = static_pointer_cast<T>(this->getPtr ());
+Return map;
+}
+        const std::shared_ptr<GchartPointBase> getPoint (const float &x) const {
+const std::shared_ptr<T> map = static_pointer_cast<T>(this->getPtr ());
+For (T::const_iterator it = map->begin (), it != map->end (), ++it) {
+Std::shared_ptr<GchartPoint<T::const_iterator>> prev, next;
+Std::pair<GchartMatchType, std::shared_ptr<GchartPoint<T>>> res;
+If (this->_filter != nullptr) {
+res = this->_filter (map, x, it);
+} else {
+res = GchartChart<T>::createPoint (it, x);
+}
+switch (std::get<0>(res)) {
+  Case MATCH_EXACT:
+Return static_pointer_cast<GchartPointBase>(std::get<1>(res));
+case MATCH_SMALLER:
+prev = std::get<1>(res);
+Break;
+case MATCH_BIGGER:
+next = std::get<1>(res);
+Break;
+case MATCH_NONE:
+default:
+Break;
+}
+}
+If (!next) return prev;
+If _interpolate == nullptr {
+Const float y = GchartChartBase::linear(...);
+Return static_pointer_cast<GchartPointBase>(GchartPoint<T::const_iterator>::create (x, y, it_prev));
+} else {
+const float y = this->_interpolate (...)
+Return static_pointer_cast<GchartPointBase>(GchartPoint<T::const_iterator>::create (x, y, it_prev));
+}
+}
+	const std::shared_ptr<GchartPoint> getNextPoint (const std::shared_ptr<GchartPoint> &prev, const float &x_hint) const;
+	//const GchartMap::const_iterator end (void) const noexcept;
+	//const GchartMap::const_iterator begin (void) const noexcept;
+	//const GchartMap::const_iterator last (void) const;
 };
 
 #endif /* __GCHART_CHART_HPP__ */
